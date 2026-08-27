@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌈 Tkinter Widgets Discovery Workshop</title>
+    <style>
+        /* --- RESET & FONTS --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', 'Quicksand', system-ui, sans-serif;
+            background: linear-gradient(145deg, #f9f2e7 0%, #ffe9d6 100%);
+            min-height: 100vh;
+            padding: 2rem 1.5rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 248, 240, 0.75);
+            backdrop-filter: blur(6px);
+            border-radius: 3.5rem;
+            padding: 2rem 2.5rem 3rem;
+            box-shadow: 0 30px 60px rgba(180, 100, 50, 0.15), 0 10px 30px rgba(0,0,0,0.05);
+            border: 1px solid rgba(255, 215, 180, 0.4);
+        }
+
+        /* --- TYPOGRAPHY --- */
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #b83b5e, #f08a5d, #f9a66c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+            display: inline-block;
+            margin-bottom: 0.2rem;
+            text-shadow: 0 4px 12px rgba(235, 120, 80, 0.2);
+        }
+        h2 {
+            font-size: 2rem;
+            margin: 2.2rem 0 1.2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 4px dashed #fbc4ab;
+            color: #773d2a;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+        h3 {
+            font-size: 1.4rem;
+            margin: 0 0 0.3rem;
+            color: #3f2a1e;
+            font-weight: 600;
+        }
+        h4 {
+            font-size: 1.1rem;
+            margin: 0.5rem 0 0.2rem;
+            color: #4d3325;
+        }
+        .subhead {
+            font-size: 1.2rem;
+            color: #6b4c38;
+            background: rgba(255, 225, 200, 0.5);
+            display: inline-block;
+            padding: 0.2rem 1.4rem;
+            border-radius: 40px;
+            backdrop-filter: blur(2px);
+        }
+
+        /* --- CARDS & STATIONS (colorful) --- */
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.8rem;
+        }
+        @media (max-width: 750px) {
+            .grid-2col {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            .container { padding: 1.5rem; }
+            h1 { font-size: 2.2rem; }
+        }
+
+        .station-card {
+            border-radius: 2rem;
+            padding: 1.6rem 1.6rem 1.4rem;
+            transition: all 0.2s ease;
+            border: 2px solid rgba(255, 200, 170, 0.3);
+            box-shadow: 0 10px 20px -8px rgba(140, 80, 40, 0.08);
+            background: rgba(255, 245, 235, 0.7);
+            backdrop-filter: blur(4px);
+        }
+        .station-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 30px -10px rgba(180, 100, 50, 0.2);
+            border-color: #fbc09e;
+        }
+
+        /* individual station colors */
+        .station-1 { background: linear-gradient(145deg, #fff3ee, #ffe4d6); border-left: 8px solid #e8684a; }
+        .station-2 { background: linear-gradient(145deg, #edf7fa, #dceef5); border-left: 8px solid #4a9eb5; }
+        .station-3 { background: linear-gradient(145deg, #f3f5e7, #e9efd2); border-left: 8px solid #b3b84a; }
+        .station-4 { background: linear-gradient(145deg, #f2ebf7, #e6d9f0); border-left: 8px solid #9b6bb0; }
+        .station-5 { background: linear-gradient(145deg, #fce8f0, #fad4e2); border-left: 8px solid #d95b8a; }
+        .station-6 { background: linear-gradient(145deg, #f5efe6, #f0e4d0); border-left: 8px solid #c28a4a; }
+        .station-7 { background: linear-gradient(145deg, #e6f3ed, #d0ebe0); border-left: 8px solid #3f9e7a; }
+        .station-8 { background: linear-gradient(145deg, #fce9e6, #fad6d0); border-left: 8px solid #d96a5a; }
+
+        .station-card .badge {
+            display: inline-block;
+            background: rgba(255,255,240,0.7);
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            color: #4d3224;
+            backdrop-filter: blur(2px);
+        }
+        .file-list {
+            display: inline-block;
+            background: rgba(255, 255, 240, 0.7);
+            border-radius: 30px;
+            padding: 0.2rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #4a3226;
+            margin: 0.3rem 0 0.6rem;
+            backdrop-filter: blur(2px);
+        }
+        .file-list code {
+            background: transparent;
+            font-weight: 600;
+        }
+        .discovery-tasks {
+            background: rgba(255, 240, 225, 0.5);
+            border-radius: 1.2rem;
+            padding: 0.7rem 1.2rem;
+            margin: 0.7rem 0;
+            border-left: 5px solid #e8a87c;
+            backdrop-filter: blur(2px);
+        }
+        .discovery-tasks li {
+            list-style-type: '✨ ';
+            padding-left: 0.3rem;
+        }
+
+        /* --- DETAILS (collapsible) colorful --- */
+        details {
+            background: rgba(255, 235, 215, 0.5);
+            border-radius: 1.5rem;
+            padding: 0.1rem 1.4rem 0.8rem;
+            margin: 0.8rem 0;
+            border: 1px solid #f5cfb8;
+            backdrop-filter: blur(2px);
+        }
+        details summary {
+            font-weight: 700;
+            cursor: pointer;
+            padding: 0.6rem 0;
+            color: #77442e;
+            font-size: 1rem;
+        }
+        details summary:hover {
+            color: #b85a3a;
+        }
+
+        /* --- HIGHLIGHT & SPECIAL BOXES --- */
+        .highlight-box {
+            background: linear-gradient(145deg, #fce9db, #fadccc);
+            border-radius: 2rem;
+            padding: 1.4rem 2rem;
+            border-left: 8px solid #e8865a;
+            margin: 1.5rem 0;
+            box-shadow: 0 8px 18px rgba(200, 120, 70, 0.1);
+        }
+        .highlight-box strong {
+            color: #7a402a;
+        }
+
+        .presentation-template {
+            background: linear-gradient(145deg, #faf0e0, #f5e4ce);
+            border-radius: 2rem;
+            padding: 1.5rem 2rem;
+            border: 2px solid #e9c9b0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            white-space: pre-wrap;
+            margin: 1rem 0;
+            color: #3e2b1e;
+        }
+
+        .reflection-box {
+            background: linear-gradient(145deg, #f7ede3, #f1dfd0);
+            border-radius: 2rem;
+            padding: 1.2rem 2rem;
+            margin: 1.2rem 0;
+            border: 2px solid #ebd0ba;
+        }
+
+        /* --- TABLES --- */
+        .widget-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255, 240, 225, 0.6);
+            border-radius: 1.5rem;
+            overflow: hidden;
+            backdrop-filter: blur(2px);
+        }
+        .widget-table th {
+            background: #eacbb8;
+            text-align: left;
+            padding: 0.6rem 1rem;
+            font-weight: 700;
+            color: #3f281d;
+        }
+        .widget-table td {
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #edd7c6;
+        }
+        .widget-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* --- MISC colorful touches --- */
+        code {
+            background: rgba(235, 200, 180, 0.4);
+            padding: 0.1rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: #6a3f2a;
+            font-weight: 500;
+        }
+        .btn-ghost {
+            background: #eacbb8;
+            padding: 0.2rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            color: #4d3122;
+        }
+        .footer-note {
+            margin-top: 2.5rem;
+            text-align: center;
+            color: #7a5a46;
+            border-top: 3px dotted #eacbb8;
+            padding-top: 1.5rem;
+            font-size: 1rem;
+        }
+        .emoji-big {
+            font-size: 1.6rem;
+            margin-right: 0.3rem;
+        }
+        .mt-1 { margin-top: 0.5rem; }
+        .mb-1 { margin-bottom: 0.5rem; }
+
+        /* checklist */
+        .checklist-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+            background: linear-gradient(145deg, #f7ede3, #f0dfd0);
+            border-radius: 2rem;
+            padding: 1.5rem 2rem;
+            border: 2px solid #e6cfbc;
+        }
+        @media (max-width: 600px) {
+            .checklist-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .checklist-grid ul {
+            list-style-type: '🌸 ';
+            padding-left: 1.2rem;
+        }
+        .checklist-grid ul li {
+            margin-bottom: 0.2rem;
+        }
+
+        /* key concepts */
+        .concept-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .concept-card {
+            background: rgba(255, 235, 215, 0.6);
+            border-radius: 1.5rem;
+            padding: 1rem 1.5rem;
+            backdrop-filter: blur(2px);
+            border: 1px solid #eacbb8;
+        }
+        .concept-card h4 {
+            margin-top: 0;
+            color: #6f3f2a;
+        }
+        @media (max-width: 650px) {
+            .concept-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        /* station cards inner spacing */
+        .station-card ul, .station-card ol {
+            padding-left: 1.2rem;
+        }
+        .station-card li {
+            margin-bottom: 0.15rem;
+        }
+        .station-card p {
+            margin: 0.3rem 0;
+        }
+
+        /* --- DOWNLOAD SECTION --- */
+        .download-area {
+            background: linear-gradient(145deg, #f5e6d0, #ebd4bc);
+            border-radius: 2.5rem;
+            padding: 1.5rem 2rem;
+            border: 3px dashed #b8835a;
+            margin: 2rem 0 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem 1.5rem;
+        }
+        .download-area .label {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #5a3a28;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .download-area .label span {
+            font-size: 1.6rem;
+        }
+        .download-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+        .download-btn {
+            background: #7a4f38;
+            border: none;
+            border-radius: 60px;
+            padding: 0.6rem 1.4rem;
+            font-weight: 600;
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 8px rgba(120, 70, 40, 0.15);
+        }
+        .download-btn:hover {
+            background: #5f3d2b;
+            transform: scale(1.02);
+            box-shadow: 0 6px 14px rgba(120, 70, 40, 0.25);
+        }
+        .download-btn.zip-btn {
+            background: #b8835a;
+        }
+        .download-btn.zip-btn:hover {
+            background: #9e6f4a;
+        }
+        .download-btn code {
+            background: rgba(255,255,240,0.2);
+            color: white;
+            padding: 0.1rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+        .file-badge {
+            background: rgba(255,255,240,0.2);
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 400;
+        }
+        @media (max-width: 600px) {
+            .download-area {
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+            .download-buttons {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- HEADER with sparkle -->
+    <h1>🌈 Tkinter Widgets Discovery Workshop</h1>
+    <p class="subhead">✨ interactive · playful · grade 8</p>
+    <p style="font-size:1.2rem; color:#5a3f2e; margin-top:0.2rem; background:rgba(255,225,200,0.4); padding:0.3rem 1.2rem; border-radius:40px; display:inline-block; backdrop-filter:blur(2px);">
+        🧑‍🤝‍🧑 explore, discover, share
+    </p>
+
+    <!-- ============ DOWNLOAD ALL FILES ============ -->
+    <div class="download-area">
+        <div class="label">
+            <span>📦</span> Download all Python files
+        </div>
+        <div class="download-buttons">
+            <button class="download-btn" onclick="downloadAllFiles()">
+                ⬇️ Download All Widgets
+                <span class="file-badge">24 files</span>
+            </button>
+            <button class="download-btn zip-btn" onclick="downloadZip()">
+                📥 Download as ZIP
+                <span class="file-badge">coming soon</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Getting started -->
+    <h2>🚀 Getting Started</h2>
+    <div class="highlight-box">
+        <p><strong>🌟 Instructions:</strong></p>
+        <ol style="margin-top:0.2rem;">
+            <li>Open the Python file for the widget you are exploring.</li>
+            <li>Run the code and observe what happens.</li>
+            <li>Click, type, and interact with the widgets.</li>
+            <li>Write down anything you notice or any questions you have.</li>
+        </ol>
+        <p style="margin-top:0.6rem;"><strong>🔍 Discovery questions:</strong></p>
+        <ul>
+            <li>What happens when you click different widgets?</li>
+            <li>Which widgets look similar? Which look different?</li>
+            <li>What information can you see on the screen?</li>
+        </ul>
+    </div>
+
+    <!-- ============ WIDGET DISCOVERY STATIONS ============ -->
+    <h2>🎯 Widget Discovery Stations</h2>
+    <p style="color:#5a3f2e; font-weight:500; background:rgba(255,215,180,0.3); padding:0.2rem 1.2rem; border-radius:40px; display:inline-block; backdrop-filter:blur(2px);">
+        👥 groups of 3–4 · each group explores 2 widgets
+    </p>
+
+    <div class="grid-2col">
+
+        <!-- STATION 1: Checkbutton -->
+        <div class="station-card station-1">
+            <h3><span class="emoji-big">✅</span> Checkbutton</h3>
+            <div class="file-list">📄 <code>checkbutton.py</code> · <code>pizza-order-form.py</code> · <code>dark-mode-toggle.py</code></div>
+            <p><strong>🎬 What to do:</strong> Run examples, select toppings, try dark mode.</p>
+            <div class="discovery-tasks">
+                <strong>🔎 Discovery tasks:</strong>
+                <ul>
+                    <li>What happens to the total when you check/uncheck a topping?</li>
+                    <li>How many toppings can you select at once?</li>
+                    <li>What changes in the Dark Mode Toggle?</li>
+                </ul>
+            </div>
+            <p><strong>🏆 Challenge:</strong> Add "Pineapple" for ฿1.50.</p>
+            <details>
+                <summary>📝 Record your findings</summary>
+                <p style="white-space:pre-line; background:rgba(255,240,230,0.7); padding:0.5rem 1rem; border-radius:1rem; font-size:0.95rem;">
+                What I noticed about Checkbuttons:
+                1. 
+                2. 
+                3. 
+                </p>
+            </details>
+        </div>
+
+        <!-- STATION 2: Combobox -->
+        <div class="station-card station-2">
+            <h3><span class="emoji-big">📋</span> Combobox</h3>
+            <div class="file-list">📄 <code>combobox.py</code> · <code>country-selector.py</code> · <code>font-style-picker.py</code></div>
+            <p><strong>🎬 What to do:</strong> Select computers, countries, change fonts.</p>
+            <div class="discovery-tasks">
+                <strong>🔎 Discovery tasks:</strong>
+                <ul>
+                    <li>What happens when you select a country?</li>
+                    <li>What happens if you try to type in a read-only combobox?</li>
+                    <li>How is the Font Style Picker different from the Country Selector?</li>
+                </ul>
+            </div>
+            <p><strong>🏆 Challenge:</strong> Add 3 more countries and capitals.</p>
+            <details>
+                <summary>📝 Record your findings</summary>
+                <p style="white-space:pre-line; background:rgba(240,248,255,0.7); padding:0.5rem 1rem; border-radius:1rem; font-size:0.95rem;">
+                What I noticed about Comboboxes:
+                1. 
+                2. 
+                3. 
+                </p>
+            </details>
+        </div>
+
+        <!-- STATION 3: Listbox -->
+        <div class="station-card station-3">
+            <h3><span class="emoji-big">📃</span> Listbox</h3>
+            <div class="file-list">📄 <code>listbox.py</code> · <code>music-playlist.py</code> · <code>multi-select-shopping-cart.py</code></div>
+            <p><strong>🎬 What to do:</strong> Click, double-click, add items to cart.</p>
+            <div class="discovery-tasks">
+                <strong>🔎 Discovery tasks:</strong>
+                <ul>
+                    <li>What happens when you double-click a song?</li>
+                    <li>How is the Shopping Cart Listbox different?</li>
+                    <li>What does "Hold CTRL to select multiple items" mean?</li>
+                </ul>
+            </div>
+            <p><strong>🏆 Challenge:</strong> Add 5 more songs to the playlist.</p>
+            <details>
+                <summary>📝 Record your findings</summary>
+                <p style="white-space:pre-line; background:rgba(240,250,230,0.7); padding:0.5rem 1rem; border-radius:1rem; font-size:0.95rem;">
+                What I noticed about Listboxes:
+                1. 
+                2. 
+                3. 
+                </p>
+            </details>
+        </div>
+
+        <!-- STATION 4: Progressbar -->
+        <div class="station-card station-4">
+            <h3><span class="emoji-big">📊</span> Progressbar</h3>
+            <div class="file-list">📄 <code>progressbar.py</code> · <code>file-download-simulator.py</code> · <code>countdown-timer.py</code></div>
+            <p><strong>🎬 What to do:</strong> Start/stop, download simulation, countdown.</p>
+            <div class="discovery-tasks">
+                <strong>🔎 Discovery tasks:</strong>
+                <ul>
+                    <li>How does the progress bar change during download?</li>
+                    <li>What happens when you click "Pause"?</li>
+                    <li>How is the Countdown Timer different from the Download?</li>
+                </ul>
+            </div>
+            <p><strong>🏆 Challenge:</strong> Change the download speed (faster or slower).</p>
+            <details>
+                <summary>📝 Record your findings</summary>
+                <p style="white-space:pre-line; background:rgba(245,235,255,0.7); padding:0.5rem 1rem; border-radius:1rem; font-size:0.95rem;">
+                What I noticed about Progressbars:
+                1. 
+                2. 
+                3. 
+                </p>
+            </details>
+        </div>
+
+        <!-- STATION 5: Radiobutton -->
+        <div class="station-card station-5">
+            <h3><span class="emoji-big">🔘</span> Radiobutton</h3>
+            <div class="file-list">📄 <code>radiobutton.py</code> · <code>payment-method.py</code></div>
+            <p><strong>🎬 What to do:</strong> Select shifts, payment methods, watch fields change.</p>
+            <div class="discovery-tasks">
+                <strong>🔎 Discovery tasks:</strong>
+                <ul>
+                    <li>How many payment methods can you select at once?</li>
+                    <li>What happens to the entry fields when you change method?</li>
+                    <li>Why can't you select both "Cash" and "Credit Card"?</li>
+                </ul>
+            </div>
+            <p><strong>🏆 Challenge:</strong> Add "Bank Transfer" as a payment method.</p>
+            <details>
+                <summary>📝 Record your findings</summary>
+                <p style="white-space:pre-line; background:rgba(255,235,245,0.7); padding:0.5rem 1rem; border-radius:1rem; font-size:0.95rem;">
+                What I noticed about Radiobuttons:
+                1. 
+                2. 
+                3. 
+                </p>
+            </details>
+        </div>
+
+        <!-- STATION 6: Scale (Slider) -->
+        <div class="station-card station-6">
+            <h3><span class="emoji-big">🎚️</span> Scale (Slider)</h3>
+            <div class="file-list">📄 <code>scale.py</code> · <code>color-mixer.py</code></div>
+            <p><strong>🎬 What to do:</strong> Move sliders, mix colors, change values.</p>
+            <div class="discovery-tasks">
+                <strong>🔎 Discovery tasks:</strong>
+                <ul>
+                    <li>What happens to the color when you move the Red slider?</li>
+                    <li>How does the Hex code change?</li>
+                    <li>What's the difference between horizontal and vertical sliders?</li>
+                </ul>
+            </div>
+            <p><strong>🏆 Challenge:</strong> Change the scale range from 0–100 to 0–50.</p>
+            <details>
+                <summary>📝 Record your findings</summary>
+                <p style="white-space:pre-line; background:rgba(250,240,225,0.7); padding:0.5rem 1rem; border-radius:1rem; font-size:0.95rem;">
+                What I noticed about Scales (Sliders):
+                1. 
+                2. 
+                3. 
+                </p>
+            </details>
+        </div>
+
+        <!-- STATION 7: Spinbox -->
+        <div class="station-card station-7">
+            <h3><span class="emoji-big">🔢</span> Spinbox</h3>
+            <div class="file-list">📄 <code>spinbox.py</code> · <code>ticket-quantity.py</code></div>
+            <p><strong>🎬 What to do:</strong> Use arrows, type numbers, change ticket quantity.</p>
+            <div class="discovery-tasks">
+                <strong>🔎 Discovery tasks:</strong>
+                <ul>
+                    <li>What happens to the total price when you change quantity?</li>
+                    <li>What's the minimum and maximum number of tickets?</li>
+                    <li>What happens if you type "5" instead of using arrows?</li>
+                </ul>
+            </div>
+            <p><strong>🏆 Challenge:</strong> Change the ticket price to 200 THB.</p>
+            <details>
+                <summary>📝 Record your findings</summary>
+                <p style="white-space:pre-line; background:rgba(225,245,235,0.7); padding:0.5rem 1rem; border-radius:1rem; font-size:0.95rem;">
+                What I noticed about Spinboxes:
+                1. 
+                2. 
+                3. 
+                </p>
+            </details>
+        </div>
+
+        <!-- STATION 8: Entry -->
+        <div class="station-card station-8">
+            <h3><span class="emoji-big">✏️</span> Entry</h3>
+            <div class="file-list">📄 <code>entry.py</code> · <code>login-form.py</code> · <code>live-search-filter.py</code></div>
+            <p><strong>🎬 What to do:</strong> Type numbers, login, search and filter.</p>
+            <div class="discovery-tasks">
+                <strong>🔎 Discovery tasks:</strong>
+                <ul>
+                    <li>What happens when you type in the password field?</li>
+                    <li>What happens when you click "Show Password"?</li>
+                    <li>How does the list change as you type in the search box?</li>
+                </ul>
+            </div>
+            <p><strong>🏆 Challenge:</strong> Change the multiplier in <code>entry.py</code> from 5 to 10.</p>
+            <details>
+                <summary>📝 Record your findings</summary>
+                <p style="white-space:pre-line; background:rgba(255,235,230,0.7); padding:0.5rem 1rem; border-radius:1rem; font-size:0.95rem;">
+                What I noticed about Entry widgets:
+                1. 
+                2. 
+                3. 
+                </p>
+            </details>
+        </div>
+    </div> <!-- end grid -->
+
+    <!-- ============ GROUP DISCUSSION ============ -->
+    <h2>💬 Group Discussion</h2>
+    <p style="background:rgba(255,215,180,0.3); padding:0.3rem 1.2rem; border-radius:40px; display:inline-block; backdrop-filter:blur(2px);">
+        🗣️ share your discoveries · 20–30 min
+    </p>
+    <div style="margin:1rem 0 0.5rem; background:rgba(250,225,200,0.4); border-radius:2rem; padding:1rem 1.8rem;">
+        <p><strong>Each group prepares:</strong></p>
+        <ul style="columns:2; column-gap:2rem;">
+            <li>🌟 Most interesting thing</li>
+            <li>🤔 Most confusing thing</li>
+            <li>❓ One question you still have</li>
+            <li>📱 Real-world app that uses similar widgets</li>
+        </ul>
+    </div>
+
+    <details>
+        <summary><strong>🎯 Discussion questions by widget (click to expand)</strong></summary>
+        <div style="margin-top:0.8rem; display:grid; grid-template-columns:1fr 1fr; gap:0.5rem 1.5rem;">
+            <p><strong>✅ Checkbutton:</strong> Why use instead of Radiobutton? When to use?</p>
+            <p><strong>📋 Combobox:</strong> Why have read-only & editable? Combobox vs Listbox?</p>
+            <p><strong>📃 Listbox:</strong> Advantage of multiple selection? vs Combobox?</p>
+            <p><strong>📊 Progressbar:</strong> Why show progress? Determinate vs indeterminate?</p>
+            <p><strong>🔘 Radiobutton:</strong> Why only one? How to create different groups?</p>
+            <p><strong>🎚️ Scale:</strong> When better than typing? What makes good design?</p>
+            <p><strong>🔢 Spinbox:</strong> When use instead of slider? Why not just type?</p>
+            <p><strong>✏️ Entry:</strong> Why is input validation important? What happens without?</p>
+        </div>
+    </details>
+
+    <!-- ============ PRESENTATION TEMPLATE ============ -->
+    <h2>🎤 Group Presentation Template</h2>
+    <p><strong>⏳ 15–20 min · share with the class</strong></p>
+    <div class="presentation-template">
+Group Members: ____________
+
+Widget(s) We Explored: ____________
+
+1. What We Discovered:
+   - 
+   - 
+   - 
+
+2. Most Interesting Thing:
+   - 
+
+3. Most Confusing Thing:
+   - 
+
+4. Question We Still Have:
+   - 
+
+5. Real-world App Using This Widget:
+   - 
+
+6. One New Feature We Would Add:
+   - 
+    </div>
+
+    <!-- ============ REFLECTION ============ -->
+    <h2>✏️ Reflection</h2>
+    <p><strong>🧘 5–10 min · answer individually</strong></p>
+    <div class="reflection-box">
+        <p><strong>1. Which widget was your favorite and why?</strong></p>
+        <p style="background:rgba(255,240,225,0.6); border-radius:1.2rem; padding:0.5rem 1rem; border:2px dashed #eacbb8;">&nbsp;</p>
+        <p><strong>2. Which widget was the most difficult to understand?</strong></p>
+        <p style="background:rgba(255,240,225,0.6); border-radius:1.2rem; padding:0.5rem 1rem; border:2px dashed #eacbb8;">&nbsp;</p>
+        <p><strong>3. What real-world application could you build using these widgets?</strong></p>
+        <p style="background:rgba(255,240,225,0.6); border-radius:1.2rem; padding:0.5rem 1rem; border:2px dashed #eacbb8;">&nbsp;</p>
+        <p><strong>4. 🧩 Widget matching game:</strong> Match each task with the right widget.</p>
+        <table class="widget-table">
+            <tr><th>Task</th><th>Widget</th></tr>
+            <tr><td>Choosing a month from a list</td><td>_______</td></tr>
+            <tr><td>Selecting multiple toppings</td><td>_______</td></tr>
+            <tr><td>Entering a password</td><td>_______</td></tr>
+            <tr><td>Choosing a color</td><td>_______</td></tr>
+            <tr><td>Showing download progress</td><td>_______</td></tr>
+            <tr><td>Selecting one payment method</td><td>_______</td></tr>
+        </table>
+        <p style="margin-top:0.5rem;"><em>Options: Checkbutton · Combobox · Entry · Listbox · Progressbar · Radiobutton · Scale · Spinbox</em></p>
+        <p><strong>5. If you could add one feature to any widget, what would it be?</strong></p>
+        <p style="background:rgba(255,240,225,0.6); border-radius:1.2rem; padding:0.5rem 1rem; border:2px dashed #eacbb8;">&nbsp;</p>
+    </div>
+
+    <!-- ============ EXTENSION ACTIVITIES ============ -->
+    <h2>🚀 Extension Activities</h2>
+    <p style="color:#5a3f2e;"><em>🌟 for advanced explorers</em></p>
+    <div class="grid-2col" style="margin-top:0.5rem;">
+        <div class="station-card" style="background:linear-gradient(145deg, #f5e6d0, #ebd4bc); border-left:8px solid #b8835a;">
+            <h4>📝 Registration Form</h4>
+            <p>Entry, Combobox, Radiobuttons, Spinbox, Checkbutton + validation.</p>
+        </div>
+        <div class="station-card" style="background:linear-gradient(145deg, #d6e8e0, #c5ddd2); border-left:8px solid #4d8f7a;">
+            <h4>🧮 Simple Calculator</h4>
+            <p>Entry for numbers, Buttons for operations, Label for result.</p>
+        </div>
+        <div class="station-card" style="background:linear-gradient(145deg, #f5e0d9, #ecd0c5); border-left:8px solid #b86a5a;">
+            <h4>📋 Survey Form</h4>
+            <p>Combine multiple widget types, collect and display results.</p>
+        </div>
+        <div class="station-card" style="background:linear-gradient(145deg, #e6ddee, #d8cce3); border-left:8px solid #8f6ba8;">
+            <h4>⚙️ Settings Panel</h4>
+            <p>Scale, Radiobuttons, Checkbuttons, Combobox for preferences.</p>
+        </div>
+        <div class="station-card" style="background:linear-gradient(145deg, #f5e8d0, #ecdbc0); border-left:8px solid #b89a5a;">
+            <h4>🐛 Bug Hunt</h4>
+            <p>Find and fix errors in provided code (missing functions, wrong parameters).</p>
+        </div>
+    </div>
+
+    <!-- ============ KEY CONCEPTS ============ -->
+    <h2>🎓 Key Concepts Summary</h2>
+    <div class="concept-grid">
+        <div class="concept-card"><h4>⚡ Event Loop</h4><p><code>mainloop()</code> keeps GUI running. <code>time.sleep()</code> freezes it.</p></div>
+        <div class="concept-card"><h4>📐 Geometry Managers</h4><p><code>pack()</code> – stack · <code>grid()</code> – table · <code>place()</code> – exact</p></div>
+        <div class="concept-card"><h4>📦 Variable Types</h4><p><code>StringVar</code> · <code>IntVar</code> · <code>BooleanVar</code></p></div>
+        <div class="concept-card"><h4>🧩 Widget Overview</h4>
+            <table style="width:100%; font-size:0.85rem; border-collapse:collapse;">
+                <tr><td><strong>Checkbutton</strong></td><td>multiple options</td></tr>
+                <tr><td><strong>Combobox</strong></td><td>dropdown selection</td></tr>
+                <tr><td><strong>Listbox</strong></td><td>list of items</td></tr>
+                <tr><td><strong>Progressbar</strong></td><td>show progress</td></tr>
+                <tr><td><strong>Radiobutton</strong></td><td>one option</td></tr>
+                <tr><td><strong>Scale</strong></td><td>slider input</td></tr>
+                <tr><td><strong>Spinbox</strong></td><td>number with arrows</td></tr>
+                <tr><td><strong>Entry</strong></td><td>text input</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- ============ STUDENT CHECKLIST ============ -->
+    <h2>📋 Student Checklist</h2>
+    <div class="checklist-grid">
+        <div>
+            <p><strong>🔹 Before discussion:</strong></p>
+            <ul>
+                <li>Run all example codes</li>
+                <li>Take notes on each widget</li>
+                <li>Complete discovery tasks</li>
+                <li>Identify interesting &amp; confusing things</li>
+                <li>Prepare one question</li>
+            </ul>
+        </div>
+        <div>
+            <p><strong>🔸 During discussion:</strong></p>
+            <ul>
+                <li>Share findings</li>
+                <li>Listen to others</li>
+                <li>Ask questions</li>
+                <li>Take notes from others</li>
+            </ul>
+            <p style="margin-top:0.5rem;"><strong>🔹 After discussion:</strong></p>
+            <ul>
+                <li>Understand each widget</li>
+                <li>Know when to use each</li>
+                <li>Explain differences</li>
+                <li>Have project ideas</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ============ TEACHER NOTES ============ -->
+    <h2>📝 Teacher's Notes</h2>
+    <div style="background:rgba(255,225,200,0.4); border-radius:2rem; padding:1.2rem 1.8rem; backdrop-filter:blur(2px); border:2px solid #eacbb8;">
+        <p><strong>📂 File Reference</strong></p>
+        <table class="widget-table" style="font-size:0.9rem;">
+            <tr><th>Station</th><th>Widget</th><th>Files</th></tr>
+            <tr><td>1</td><td>Checkbutton</td><td><code>checkbutton.py</code>, <code>pizza-order-form.py</code>, <code>dark-mode-toggle.py</code></td></tr>
+            <tr><td>2</td><td>Combobox</td><td><code>combobox.py</code>, <code>country-selector.py</code>, <code>font-style-picker.py</code></td></tr>
+            <tr><td>3</td><td>Listbox</td><td><code>listbox.py</code>, <code>music-playlist.py</code>, <code>multi-select-shopping-cart.py</code></td></tr>
+            <tr><td>4</td><td>Progressbar</td><td><code>progressbar.py</code>, <code>file-download-simulator.py</code>, <code>countdown-timer.py</code></td></tr>
+            <tr><td>5</td><td>Radiobutton</td><td><code>radiobutton.py</code>, <code>payment-method.py</code></td></tr>
+            <tr><td>6</td><td>Scale</td><td><code>scale.py</code>, <code>color-mixer.py</code></td></tr>
+            <tr><td>7</td><td>Spinbox</td><td><code>spinbox.py</code>, <code>ticket-quantity.py</code></td></tr>
+            <tr><td>8</td><td>Entry</td><td><code>entry.py</code>, <code>login-form.py</code>, <code>live-search-filter.py</code></td></tr>
+        </table>
+        <p style="margin-top:0.6rem;"><strong>💡 Common issues:</strong> Students not running code, confusion about variables, <code>command</code> binding, functions defined after use.</p>
+        <p><strong>🗣️ Wrap-up questions:</strong> “What was your biggest ‘aha!’ moment?” · “Which widget would you use to build a game?” · “What questions do you still have?”</p>
+    </div>
+
+    <div class="footer-note">
+        🌟 Tkinter Widgets Discovery Workshop — Grade 8 · have fun & keep exploring! 🌟
+    </div>
+
+</div> <!-- end container -->
+
+<script>
+    // -------- FILE DATA (base64 encoded for download) --------
+    // This map contains all the files from the tkinter-files folder.
+    // Each key is the filename, value is the file content as a string.
+    const fileMap = {
+        "checkbutton.py": `import tkinter as tk\n\n\nroot = tk.Tk()\nroot.title("Widgets")\nroot.geometry("600x400")\nroot.resizable(False,False)\n\nfonts = ("Arial", 25, "bold")\n\ndef show_selection():\n    result = ""\n    if var1.get():\n        result += "Student 1 "\n    if var2.get():\n        result += "Student 2 "\n    if var3.get():\n        result += "Student 3 "\n    \n    if result:\n        label.config(text=f"Selected: {result}")\n    else:\n        label.config(text="Nothing selected!")\n\n\n\nvar1 = tk.BooleanVar()\nvar2 = tk.BooleanVar()\nvar3 = tk.BooleanVar()\n\n\ncb1 = tk.Checkbutton(root, text="Student 1", variable=var1, font=fonts)\ncb1.pack(pady=5)\n\ncb2 = tk.Checkbutton(root, text="Student 2", variable=var2, font=fonts)\ncb2.pack(pady=5)\n\ncb3 = tk.Checkbutton(root, text="Student 3", variable=var3, font=fonts)\ncb3.pack(pady=5)\n\n\ntk.Button(root, text="Show Selection", font=fonts, command=show_selection).pack(pady=10)\n\n\nlabel = tk.Label(root, text="Select options above", font=fonts)\nlabel.pack(pady=10)\n\nroot.mainloop()`,
+        "pizza-order-form.py": `import tkinter as tk\nfrom tkinter import ttk\n\n# Create main window\nroot = tk.Tk()\nroot.title("Pizza Order Form")\nroot.geometry("400x350")\n\n# Topping prices dictionary\ntopping_prices = {\n    "Pepperoni": 22.50,\n    "Mushrooms": 31.50,\n    "Olives": 11.00,\n    "Extra Cheese": 31.75,\n    "Bacon": 32.00\n}\n\ntopping_vars = {}\n\n\ntk.Label(root, text="Choose Your Toppings", font=("Arial", 16, "bold")).pack(pady=10)\n\n\ndef update_total():\n    total = 0.0\n    for topping, var in topping_vars.items():\n        if var.get() == 1:  # Checked\n            total += topping_prices[topping]\n    total_label.config(text=f"Total: ${total:.2f}")\n\n\ndef reset_order():\n    for var in topping_vars.values():\n        var.set(0)\n    update_total()\n\n\nfor topping, price in topping_prices.items():\n    var = tk.IntVar(value=0)  # 0 = unchecked, 1 = checked\n    topping_vars[topping] = var\n    \n    cb = tk.Checkbutton(\n        root, \n        text=f"{topping} (฿{price:.2f})", \n        variable=var,\n        command=update_total,\n        font=("Arial", 11)\n    )\n    cb.pack(anchor="w", padx=50, pady=2)\n\nttk.Separator(root, orient="horizontal").pack(fill="x", pady=15, padx=20)\n\ntotal_label = tk.Label(\n    root, \n    text="Total: ฿0.00", \n    font=("Arial", 18, "bold"),\n    fg="green"\n)\ntotal_label.pack(pady=10)\n\n\ntk.Button(\n    root, \n    text="Reset Order", \n    command=reset_order,\n    bg="#f0f0f0",\n    padx=20\n).pack(pady=10)\n\nroot.mainloop()`,
+        "dark-mode-toggle.py": `import tkinter as tk\nfrom tkinter import ttk\n\n# Create main window\nroot = tk.Tk()\nroot.title("🌓 Dark Mode Toggle")\nroot.geometry("500x400")\n\n# Variable to track dark mode state (0 = light, 1 = dark)\ndark_mode = tk.IntVar(value=0)\n\n# Define color schemes\nlight_mode = {\n    "bg": "#f0f0f0",\n    "fg": "#000000",\n    "button_bg": "#e0e0e0",\n    "entry_bg": "#ffffff"\n}\n\ndark_mode_colors = {\n    "bg": "#2d2d2d",\n    "fg": "#ffffff",\n    "button_bg": "#4a4a4a",\n    "entry_bg": "#3d3d3d"\n}\n\n# Function to toggle dark mode\ndef toggle_dark_mode():\n    if dark_mode.get() == 1:\n        colors = dark_mode_colors\n    else:\n        colors = light_mode\n    \n    # Change main window background\n    root.config(bg=colors["bg"])\n    \n    # Change all widgets\n    for widget in root.winfo_children():\n        try:\n            widget.config(bg=colors["bg"], fg=colors["fg"])\n        except:\n            pass  # Some widgets may not accept bg/fg\n        \n        # Handle specific widget types\n        if isinstance(widget, tk.Button):\n            widget.config(bg=colors["button_bg"])\n        elif isinstance(widget, tk.Entry):\n            widget.config(bg=colors["entry_bg"])\n        elif isinstance(widget, tk.Text):\n            widget.config(bg=colors["entry_bg"])\n        elif isinstance(widget, tk.LabelFrame):\n            widget.config(bg=colors["bg"], fg=colors["fg"])\n            # Change children inside LabelFrame\n            for child in widget.winfo_children():\n                try:\n                    child.config(bg=colors["bg"], fg=colors["fg"])\n                except:\n                    pass\n\n# Main content frame\ncontent_frame = tk.Frame(root)\ncontent_frame.pack(pady=30, padx=40, fill="both", expand=True)\n\n# Header\ntk.Label(\n    content_frame, \n    text="Dark Mode Demo", \n    font=("Arial", 18, "bold")\n).pack(pady=10)\n\n# Checkbutton for dark mode toggle\ntoggle_cb = tk.Checkbutton(\n    content_frame,\n    text="Enable Dark Mode",\n    variable=dark_mode,\n    command=toggle_dark_mode,\n    font=("Arial", 12)\n)\ntoggle_cb.pack(pady=10)\n\n# Sample content to show the effect\nsample_frame = tk.LabelFrame(content_frame, text="Sample Content", font=("Arial", 11))\nsample_frame.pack(pady=15, fill="x")\n\ntk.Label(sample_frame, text="This is a sample label").pack(pady=5)\ntk.Entry(sample_frame).pack(pady=5, padx=10, fill="x")\ntk.Button(sample_frame, text="Sample Button").pack(pady=5)\n\n# Description\ntk.Label(\n    content_frame,\n    text="Check the box above to toggle\\nbetween Light and Dark modes",\n    font=("Arial", 10),\n    justify="center"\n).pack(pady=10)\n\n# Initialize in light mode\ntoggle_dark_mode()\n\nroot.mainloop()`,
+        "combobox.py": `import tkinter as tk\nfrom tkinter import ttk\n\nroot = tk.Tk()\nroot.title("Widgets - Combobox")\nroot.geometry("600x400")\nroot.resizable(False, False)\n\nfonts = ("Arial", 25, "bold")\n\ndef show_selection():\n    selected = combo.get()\n    if selected:\n        label.config(text=f"Selected: {selected}")\n    else:\n        label.config(text="Nothing selected!")\n\n\ncombo = ttk.Combobox(root, values=["Computer 1", "Computer 2", "Computer 3", "Computer 4", "Computer 5"], width=30)\ncombo.pack(pady=30)\n\n\ncombo.set("Select a computer")\n\n\nbutton = tk.Button(root, text="Show Selection", command=show_selection, font=("Arial", 12))\nbutton.pack(pady=10)\n\n\nlabel = tk.Label(root, text="Select a computer", font=fonts)\nlabel.pack(pady=10)\n\nroot.mainloop()`,
+        "country-selector.py": `import tkinter as tk\nfrom tkinter import ttk\n\n# Create main window\nroot = tk.Tk()\nroot.title("Country and Capital Selector")\nroot.geometry("500x400")\nroot.configure(bg="#f0f8ff")\n\n# Dictionary of countries and their capitals (focusing on Southeast Asia)\ncountry_capitals = {\n    "Thailand": "Bangkok",\n    "Laos": "Vientiane",\n    "Cambodia": "Phnom Penh",\n    "Vietnam": "Hanoi",\n    "Myanmar": "Naypyidaw",\n    "Malaysia": "Kuala Lumpur",\n    "Singapore": "Singapore",\n    "Indonesia": "Jakarta",\n    "Philippines": "Manila",\n    "Japan": "Tokyo",\n    "South Korea": "Seoul",\n    "China": "Beijing",\n    "India": "New Delhi",\n    "United States": "Washington D.C.",\n    "United Kingdom": "London",\n    "France": "Paris",\n    "Germany": "Berlin",\n    "Australia": "Canberra"\n}\n\n# Header\nheader_label = tk.Label(\n    root,\n    text="Select a Country to See Its Capital",\n    font=("Arial", 16, "bold"),\n    bg="#f0f8ff",\n    fg="#2c3e50"\n)\nheader_label.pack(pady=20)\n\n# Subtitle\ntk.Label(\n    root,\n    text="Choose a country from the list below",\n    font=("Arial", 11),\n    bg="#f0f8ff",\n    fg="#34495e"\n).pack(pady=5)\n\n# Variable to store selected country\nselected_country = tk.StringVar()\n\n# Combobox for country selection (READ-ONLY)\ncountry_combo = ttk.Combobox(\n    root,\n    textvariable=selected_country,\n    values=list(country_capitals.keys()),\n    font=("Arial", 12),\n    width=30,\n    state="readonly"  # Read-only mode\n)\ncountry_combo.pack(pady=15)\n\n# Function to update capital display\ndef show_capital():\n    country = selected_country.get()\n    if country in country_capitals:\n        capital = country_capitals[country]\n        result_label.config(\n            text=f"Capital of {country} is {capital}",\n            fg="#27ae60"\n        )\n        info_text.set(f"Country: {country}\\nCapital: {capital}")\n    else:\n        result_label.config(\n            text="Please select a country from the list",\n            fg="#e74c3c"\n        )\n        info_text.set("Please select a valid country")\n\n# Button to show capital\nshow_button = tk.Button(\n    root,\n    text="Show Capital",\n    command=show_capital,\n    font=("Arial", 12),\n    bg="#3498db",\n    fg="white",\n    padx=20,\n    pady=5,\n    cursor="hand2"\n)\nshow_button.pack(pady=10)\n\n# Result label (big display)\nresult_label = tk.Label(\n    root,\n    text="Select a country and click the button",\n    font=("Arial", 14, "bold"),\n    bg="#f0f8ff",\n    fg="#7f8c8d",\n    wraplength=400\n)\nresult_label.pack(pady=15)\n\n# Information display (detailed)\ninfo_frame = tk.LabelFrame(\n    root,\n    text="Country Information",\n    font=("Arial", 11, "bold"),\n    bg="#f0f8ff",\n    fg="#2c3e50"\n)\ninfo_frame.pack(pady=10, padx=30, fill="x")\n\ninfo_text = tk.StringVar()\ninfo_text.set("Waiting for country selection...")\n\ninfo_label = tk.Label(\n    info_frame,\n    textvariable=info_text,\n    font=("Arial", 12),\n    bg="#f0f8ff",\n    fg="#2c3e50",\n    justify="left"\n)\ninfo_label.pack(pady=10, padx=20)\n\n# Status bar (shows selected value)\nstatus_label = tk.Label(\n    root,\n    text="Status: Ready",\n    font=("Arial", 10),\n    bg="#ecf0f1",\n    fg="#7f8c8d",\n    relief="sunken",\n    anchor="w",\n    padx=10\n)\nstatus_label.pack(side="bottom", fill="x", pady=(10,0))\n\n# Function to update status when selection changes\ndef on_country_select(event):\n    country = selected_country.get()\n    if country in country_capitals:\n        status_label.config(\n            text=f"Selected: {country} - Capital: {country_capitals[country]}",\n            fg="#27ae60"\n        )\n    else:\n        status_label.config(\n            text="Please select a country from the list only",\n            fg="#e74c3c"\n        )\n\n# Bind selection event\ncountry_combo.bind("<<ComboboxSelected>>", on_country_select)\n\n# Additional feature: Auto-show capital when selected\ndef auto_show_capital(event=None):\n    if selected_country.get() in country_capitals:\n        show_capital()\n\n# Auto-show when selected\ncountry_combo.bind("<<ComboboxSelected>>", auto_show_capital)\n\nroot.mainloop()`,
+        "font-style-picker.py": `import tkinter as tk\nfrom tkinter import ttk\n\n# Create main window\nroot = tk.Tk()\nroot.title("Font Style Picker")\nroot.geometry("600x450")\nroot.configure(bg="#fff8e7")\n\n# Sample text options\nsample_texts = [\n    "The quick brown fox jumps over the lazy dog",\n    "Hello World! This is a sample text.",\n    "Programming is fun with Python",\n    "Font selection made easy",\n    "Design your own style",\n    "Typography matters"\n]\n\n# Dictionary of available fonts\navailable_fonts = {\n    "Arial": "Sans-serif font",\n    "Times New Roman": "Serif font",\n    "Courier New": "Monospace font",\n    "Verdana": "Sans-serif font",\n    "Georgia": "Serif font",\n    "Comic Sans MS": "Casual font",\n    "Tahoma": "Sans-serif font",\n    "Trebuchet MS": "Sans-serif font",\n    "Impact": "Bold font",\n    "Arial Black": "Heavy font"\n}\n\n# Available sizes\nfont_sizes = list(range(8, 73, 2))  # 8, 10, 12, ... 72\n\n# Variables\nselected_font = tk.StringVar(value="Arial")\nselected_size = tk.IntVar(value=20)\nselected_text = tk.StringVar(value=sample_texts[0])\ndark_mode = tk.BooleanVar(value=False)\n\n# Main container\nmain_frame = tk.Frame(root, bg="#fff8e7")\nmain_frame.pack(fill="both", expand=True, padx=20, pady=20)\n\n# Title\ntk.Label(\n    main_frame,\n    text="Select Your Font Style",\n    font=("Arial", 20, "bold"),\n    bg="#fff8e7",\n    fg="#8b4513"\n).pack(pady=10)\n\n# Font selection area\ncontrol_frame = tk.Frame(main_frame, bg="#fff8e7")\ncontrol_frame.pack(pady=15)\n\n# Left column: Font family\nfont_frame = tk.LabelFrame(\n    control_frame,\n    text="Font Family",\n    font=("Arial", 11, "bold"),\n    bg="#fff8e7",\n    fg="#8b4513"\n)\nfont_frame.pack(side="left", padx=10, fill="both")\n\n# Combobox for font family (READ-ONLY)\nfont_combo = ttk.Combobox(\n    font_frame,\n    textvariable=selected_font,\n    values=list(available_fonts.keys()),\n    font=("Arial", 11),\n    width=25,\n    state="readonly"  # Read-only prevents typos\n)\nfont_combo.pack(padx=10, pady=10)\n\n# Show font description\nfont_desc_label = tk.Label(\n    font_frame,\n    text=available_fonts["Arial"],\n    font=("Arial", 9),\n    bg="#fff8e7",\n    fg="#7f8c8d"\n)\nfont_desc_label.pack(padx=10, pady=(0,10))\n\n# Right column: Font size\nsize_frame = tk.LabelFrame(\n    control_frame,\n    text="Font Size",\n    font=("Arial", 11, "bold"),\n    bg="#fff8e7",\n    fg="#8b4513"\n)\nsize_frame.pack(side="left", padx=10, fill="both")\n\n# Combobox for font size (EDITABLE - user can type custom size)\nsize_combo = ttk.Combobox(\n    size_frame,\n    textvariable=selected_size,\n    values=font_sizes,\n    font=("Arial", 11),\n    width=10,\n    state="normal"  # Editable - user can type any number\n)\nsize_combo.pack(padx=10, pady=10)\n\ntk.Label(\n    size_frame,\n    text="(You can type custom size)",\n    font=("Arial", 8),\n    bg="#fff8e7",\n    fg="#95a5a6"\n).pack(padx=10, pady=(0,10))\n\n# Sample text selection\ntext_frame = tk.LabelFrame(\n    main_frame,\n    text="Sample Text",\n    font=("Arial", 11, "bold"),\n    bg="#fff8e7",\n    fg="#8b4513"\n)\ntext_frame.pack(pady=10, fill="x")\n\ntext_combo = ttk.Combobox(\n    text_frame,\n    textvariable=selected_text,\n    values=sample_texts,\n    font=("Arial", 11),\n    width=30,\n    state="readonly"\n)\ntext_combo.pack(padx=10, pady=10)\n\n# Display area (shows the sample text with selected font)\ndisplay_frame = tk.LabelFrame(\n    main_frame,\n    text="Preview",\n    font=("Arial", 11, "bold"),\n    bg="#fff8e7",\n    fg="#8b4513"\n)\ndisplay_frame.pack(pady=10, fill="both", expand=True)\n\n# The actual sample display\nsample_label = tk.Label(\n    display_frame,\n    text=selected_text.get(),\n    font=(selected_font.get(), selected_size.get()),\n    bg="white",\n    fg="#2c3e50",\n    wraplength=500,\n    relief="sunken",\n    padx=20,\n    pady=20\n)\nsample_label.pack(fill="both", expand=True, padx=10, pady=10)\n\n# Function to update the display\ndef update_font_display():\n    try:\n        font_name = selected_font.get()\n        size = selected_size.get()\n        \n        # Validate size is a number\n        if not isinstance(size, int) or size < 6 or size > 100:\n            size = 20\n            selected_size.set(20)\n        \n        # Update sample label\n        sample_label.config(\n            font=(font_name, size),\n            text=selected_text.get()\n        )\n        \n        # Update font description\n        font_desc_label.config(text=available_fonts.get(font_name, ""))\n        \n        # Update status\n        status_label.config(\n            text=f"Using font: {font_name} Size: {size}",\n            fg="#27ae60"\n        )\n    except Exception as e:\n        status_label.config(\n            text=f"Error: {str(e)}",\n            fg="#e74c3c"\n        )\n\n# Function to validate size input (for editable combobox)\ndef validate_size():\n    try:\n        value = int(selected_size.get())\n        if 6 <= value <= 100:\n            update_font_display()\n        else:\n            status_label.config(\n                text="Please enter size between 6-100",\n                fg="#e74c3c"\n            )\n    except ValueError:\n        status_label.config(\n            text="Please enter a valid number",\n            fg="#e74c3c"\n        )\n\n# Bind events\nfont_combo.bind("<<ComboboxSelected>>", lambda e: update_font_display())\nsize_combo.bind("<<ComboboxSelected>>", lambda e: update_font_display())\nsize_combo.bind("<Return>", lambda e: validate_size())  # Enter key for custom size\ntext_combo.bind("<<ComboboxSelected>>", lambda e: update_font_display())\n\n# Dark mode toggle (additional feature)\ndef toggle_dark_mode():\n    if dark_mode.get():\n        bg_color = "#2c3e50"\n        fg_color = "#ecf0f1"\n        widget_bg = "#34495e"\n        display_bg = "#2c3e50"\n    else:\n        bg_color = "#fff8e7"\n        fg_color = "#2c3e50"\n        widget_bg = "#fff8e7"\n        display_bg = "white"\n    \n    # Update root and frames\n    root.config(bg=bg_color)\n    main_frame.config(bg=bg_color)\n    control_frame.config(bg=bg_color)\n    \n    # Update all widgets in main_frame\n    for widget in main_frame.winfo_children():\n        try:\n            widget.config(bg=bg_color, fg=fg_color)\n        except:\n            pass\n        # Update children of child widgets\n        if isinstance(widget, tk.LabelFrame):\n            for child in widget.winfo_children():\n                try:\n                    child.config(bg=bg_color, fg=fg_color)\n                except:\n                    pass\n    \n    # Update sample label specially\n    sample_label.config(bg=display_bg)\n    \n    # Update status\n    mode = "Dark" if dark_mode.get() else "Light"\n    status_label.config(\n        text=f"Mode: {mode} - Using font: {selected_font.get()}",\n        bg="#34495e" if dark_mode.get() else "#ecf0f1",\n        fg="#ecf0f1" if dark_mode.get() else "#7f8c8d"\n    )\n\ndark_toggle = tk.Checkbutton(\n    main_frame,\n    text="Enable Dark Mode",\n    variable=dark_mode,\n    command=toggle_dark_mode,\n    font=("Arial", 10),\n    bg="#fff8e7"\n)\ndark_toggle.pack(pady=5)\n\n# Status bar\nstatus_label = tk.Label(\n    root,\n    text="Ready",\n    font=("Arial", 9),\n    bg="#ecf0f1",\n    fg="#7f8c8d",\n    relief="sunken",\n    anchor="w",\n    padx=10\n)\nstatus_label.pack(side="bottom", fill="x")\n\n# Initial update\nupdate_font_display()\n\nroot.mainloop()`,
+        "listbox.py": `import tkinter as tk\n\nroot = tk.Tk()\nroot.title("Widgets")\nroot.geometry("600x400")\nroot.resizable(False, False)\n\nfonts = ("Arial", 25, "bold")\n\ndef on_select(event):\n    \n    selected = listbox.curselection()\n    if selected:\n        item = listbox.get(selected[0])\n        label.config(text=f"You selected: {item}")\n\ndef on_double_click(event):\n    \n    selected = listbox.curselection()\n    if selected:\n        item = listbox.get(selected[0])\n        label.config(text=f"Double-clicked: {item}")\n\nlistbox = tk.Listbox(root, height=6, width=30, font=("Arial", 12))\nlistbox.pack(pady=20)\n\nfor item in ["Apple", "Banana", "Orange", "Grape", "Mango"]:\n    listbox.insert(tk.END, item)\n\n\nlistbox.bind('<<ListboxSelect>>', on_select) \nlistbox.bind('<Double-Button-1>', on_double_click) \n\nlabel = tk.Label(root, text="Select an item", font=fonts)\nlabel.pack(pady=10)\n\nroot.mainloop()`,
+        "music-playlist.py": `import tkinter as tk\nfrom tkinter import ttk\n\n# Create main window\nroot = tk.Tk()\nroot.title("Music Playlist Player")\nroot.geometry("550x400")\nroot.configure(bg="#f0f0f0")\n\n# List of songs\nsong_list = [\n    "Bohemian Rhapsody - Queen",\n    "Stairway to Heaven - Led Zeppelin",\n    "Imagine - John Lennon",\n    "Hotel California - Eagles",\n    "Like a Rolling Stone - Bob Dylan",\n    "Smells Like Teen Spirit - Nirvana",\n    "Billie Jean - Michael Jackson",\n    "Hey Jude - The Beatles",\n    "Wonderwall - Oasis",\n    "Don't Stop Believin' - Journey",\n    "Sweet Child O' Mine - Guns N' Roses",\n    "Shape of You - Ed Sheeran",\n    "Rolling in the Deep - Adele",\n    "Uptown Funk - Mark Ronson",\n    "Happy - Pharrell Williams"\n]\n\n# Header\ntk.Label(\n    root,\n    text="Music Playlist",\n    font=("Arial", 18, "bold"),\n    bg="#f0f0f0",\n    fg="#2c3e50"\n).pack(pady=10)\n\n# Main frame\nmain_frame = tk.Frame(root, bg="#f0f0f0")\nmain_frame.pack(pady=10, padx=20, fill="both", expand=True)\n\n# Left side: Playlist\nplaylist_frame = tk.LabelFrame(\n    main_frame,\n    text="Playlist",\n    font=("Arial", 11, "bold"),\n    bg="#f0f0f0",\n    fg="#2c3e50"\n)\nplaylist_frame.pack(side="left", fill="both", expand=True, padx=(0,10))\n\n# Create Listbox with scrollbar\nplaylist_scrollbar = tk.Scrollbar(playlist_frame)\nplaylist_scrollbar.pack(side="right", fill="y")\n\nplaylist = tk.Listbox(\n    playlist_frame,\n    selectmode="browse",  # Can select one item at a time\n    font=("Arial", 11),\n    bg="#ffffff",\n    fg="#2c3e50",\n    height=15,\n    width=30,\n    yscrollcommand=playlist_scrollbar.set\n)\nplaylist.pack(side="left", fill="both", expand=True, padx=5, pady=5)\n\nplaylist_scrollbar.config(command=playlist.yview)\n\n# Insert songs into listbox\nfor song in song_list:\n    playlist.insert("end", song)\n\n# Right side: Now Playing and Controls\nnow_playing_frame = tk.LabelFrame(\n    main_frame,\n    text="Now Playing",\n    font=("Arial", 11, "bold"),\n    bg="#f0f0f0",\n    fg="#2c3e50"\n)\nnow_playing_frame.pack(side="right", fill="both", expand=True, padx=(10,0))\n\n# Now playing display\nnow_playing_label = tk.Label(\n    now_playing_frame,\n    text="No song selected",\n    font=("Arial", 14, "bold"),\n    bg="#ffffff",\n    fg="#7f8c8d",\n    relief="sunken",\n    padx=20,\n    pady=30,\n    wraplength=200\n)\nnow_playing_label.pack(pady=20, padx=10, fill="both", expand=True)\n\n# Function to play selected song (called on double-click)\ndef play_song(event):\n    try:\n        # Get selected song\n        selection = playlist.curselection()\n        if selection:\n            index = selection[0]\n            song = playlist.get(index)\n            now_playing_label.config(\n                text=f"Now Playing:\\n{song}",\n                fg="#27ae60"\n            )\n            status_label.config(\n                text=f"Playing: {song}",\n                fg="#27ae60"\n            )\n    except:\n        pass\n\n# Bind double-click event\nplaylist.bind("<Double-Button-1>", play_song)\n\n# Play button\ndef play_selected():\n    selection = playlist.curselection()\n    if selection:\n        index = selection[0]\n        song = playlist.get(index)\n        now_playing_label.config(\n            text=f"Now Playing:\\n{song}",\n            fg="#27ae60"\n        )\n        status_label.config(\n            text=f"Playing: {song}",\n            fg="#27ae60"\n        )\n    else:\n        status_label.config(\n            text="Please select a song first",\n            fg="#e74c3c"\n        )\n\nplay_button = tk.Button(\n    now_playing_frame,\n    text="Play Selected",\n    command=play_selected,\n    bg="#27ae60",\n    fg="white",\n    font=("Arial", 11),\n    padx=15,\n    pady=5\n)\nplay_button.pack(pady=10)\n\n# Clear button\ndef clear_now_playing():\n    now_playing_label.config(\n        text="No song selected",\n        fg="#7f8c8d"\n    )\n    status_label.config(\n        text="Cleared",\n        fg="#7f8c8d"\n    )\n\nclear_button = tk.Button(\n    now_playing_frame,\n    text="Clear",\n    command=clear_now_playing,\n    bg="#e74c3c",\n    fg="white",\n    font=("Arial", 10),\n    padx=10\n)\nclear_button.pack(pady=5)\n\n# Status bar\nstatus_label = tk.Label(\n    root,\n    text="Double-click a song to play",\n    font=("Arial", 10),\n    bg="#ecf0f1",\n    fg="#7f8c8d",\n    relief="sunken",\n    anchor="w",\n    padx=10\n)\nstatus_label.pack(side="bottom", fill="x")\n\nroot.mainloop()`,
+        "multi-select-shopping-cart.py": `import tkinter as tk\nfrom tkinter import ttk\n\n# Create main window\nroot = tk.Tk()\nroot.title("Shopping Cart")\nroot.geometry("650x500")\nroot.configure(bg="#f8f9fa")\n\n# List of products with prices\nproducts = {\n    "Laptop": 899.99,\n    "Smartphone": 699.99,\n    "Headphones": 149.99,\n    "Keyboard": 79.99,\n    "Mouse": 39.99,\n    "Monitor": 299.99,\n    "Printer": 199.99,\n    "Tablet": 399.99,\n    "Smartwatch": 249.99,\n    "Speakers": 129.99,\n    "Camera": 549.99,\n    "External Hard Drive": 89.99\n}\n\n# Header\ntk.Label(\n    root,\n    text="Shopping Cart",\n    font=("Arial", 20, "bold"),\n    bg="#f8f9fa",\n    fg="#2c3e50"\n).pack(pady=10)\n\ntk.Label(\n    root,\n    text="Hold CTRL to select multiple items",\n    font=("Arial", 11),\n    bg="#f8f9fa",\n    fg="#7f8c8d"\n).pack()\n\n# Main frame\nmain_frame = tk.Frame(root, bg="#f8f9fa")\nmain_frame.pack(pady=10, padx=20, fill="both", expand=True)\n\n# Left side: Product list\nproduct_frame = tk.LabelFrame(\n    main_frame,\n    text="Products",\n    font=("Arial", 12, "bold"),\n    bg="#f8f9fa",\n    fg="#2c3e50"\n)\nproduct_frame.pack(side="left", fill="both", expand=True, padx=(0,10))\n\n# Create Listbox with MULTIPLE selection mode\nproduct_scrollbar = tk.Scrollbar(product_frame)\nproduct_scrollbar.pack(side="right", fill="y")\n\nproduct_listbox = tk.Listbox(\n    product_frame,\n    selectmode="multiple",  # MULTIPLE - can select multiple items\n    font=("Arial", 11),\n    bg="#ffffff",\n    fg="#2c3e50",\n    height=15,\n    width=30,\n    yscrollcommand=product_scrollbar.set\n)\nproduct_listbox.pack(side="left", fill="both", expand=True, padx=5, pady=5)\n\nproduct_scrollbar.config(command=product_listbox.yview)\n\n# Insert products into listbox\nfor product in products.keys():\n    product_listbox.insert("end", product)\n\n# Right side: Cart and Total\ncart_frame = tk.LabelFrame(\n    main_frame,\n    text="Your Cart",\n    font=("Arial", 12, "bold"),\n    bg="#f8f9fa",\n    fg="#2c3e50"\n)\ncart_frame.pack(side="right", fill="both", expand=True, padx=(10,0))\n\n# Cart listbox\ncart_scrollbar = tk.Scrollbar(cart_frame)\ncart_scrollbar.pack(side="right", fill="y")\n\ncart_listbox = tk.Listbox(\n    cart_frame,\n    selectmode="browse",\n    font=("Arial", 11),\n    bg="#ffffff",\n    fg="#2c3e50",\n    height=10,\n    width=25,\n    yscrollcommand=cart_scrollbar.set\n)\ncart_listbox.pack(side="left", fill="both", expand=True, padx=5, pady=5)\n\ncart_scrollbar.config(command=cart_listbox.yview)\n\n# Total display\ntotal_label = tk.Label(\n    cart_frame,\n    text="Total: $0.00",\n    font=("Arial", 16, "bold"),\n    bg="#f8f9fa",\n    fg="#27ae60"\n)\ntotal_label.pack(pady=10)\n\n# Function to add selected items to cart\ndef add_to_cart():\n    # Get all selected indices\n    selected_indices = product_listbox.curselection()\n    \n    if not selected_indices:\n        status_label.config(\n            text="Please select at least one product",\n            fg="#e74c3c"\n        )\n        return\n    \n    # Add selected items to cart\n    added_count = 0\n    for index in selected_indices:\n        product = product_listbox.get(index)\n        # Check if already in cart\n        cart_items = list(cart_listbox.get(0, "end"))\n        if product not in cart_items:\n            cart_listbox.insert("end", product)\n            added_count += 1\n    \n    # Update total\n    update_total()\n    \n    # Clear selection\n    product_listbox.selection_clear(0, "end")\n    \n    if added_count > 0:\n        status_label.config(\n            text=f"Added {added_count} item(s) to cart",\n            fg="#27ae60"\n        )\n    else:\n        status_label.config(\n            text="Items already in cart",\n            fg="#e67e22"\n        )\n\n# Function to remove selected items from cart\ndef remove_from_cart():\n    selected_indices = cart_listbox.curselection()\n    \n    if not selected_indices:\n        status_label.config(\n            text="Please select item(s) to remove",\n            fg="#e74c3c"\n        )\n        return\n    \n    # Remove items (in reverse order to maintain indices)\n    for index in reversed(selected_indices):\n        cart_listbox.delete(index)\n    \n    update_total()\n    status_label.config(\n        text="Removed item(s) from cart",\n        fg="#e74c3c"\n    )\n\n# Function to clear entire cart\ndef clear_cart():\n    cart_listbox.delete(0, "end")\n    update_total()\n    status_label.config(\n        text="Cart cleared",\n        fg="#7f8c8d"\n    )\n\n# Function to update total cost\ndef update_total():\n    total = 0.0\n    cart_items = cart_listbox.get(0, "end")\n    \n    for item in cart_items:\n        if item in products:\n            total += products[item]\n    \n    total_label.config(text=f"Total: ${total:.2f}")\n    \n    # Show item count\n    item_count = len(cart_items)\n    if item_count > 0:\n        count_label.config(text=f"Items: {item_count}")\n    else:\n        count_label.config(text="Cart is empty")\n\n# Button frame\nbutton_frame = tk.Frame(cart_frame, bg="#f8f9fa")\nbutton_frame.pack(pady=5)\n\nadd_button = tk.Button(\n    button_frame,\n    text="Add to Cart",\n    command=add_to_cart,\n    bg="#27ae60",\n    fg="white",\n    font=("Arial", 10),\n    padx=10,\n    pady=5,\n    width=12\n)\nadd_button.pack(side="left", padx=5)\n\nremove_button = tk.Button(\n    button_frame,\n    text="Remove",\n    command=remove_from_cart,\n    bg="#e74c3c",\n    fg="white",\n    font=("Arial", 10),\n    padx=10,\n    pady=5,\n    width=12\n)\nremove_button.pack(side="left", padx=5)\n\nclear_button = tk.Button(\n    cart_frame,\n    text="Clear Cart",\n    command=clear_cart,\n    bg="#95a5a6",\n    fg="white",\n    font=("Arial", 10),\n    padx=15,\n    pady=5\n)\nclear_button.pack(pady=5)\n\n# Item count\ncount_label = tk.Label(\n    cart_frame,\n    text="Cart is empty",\n    font=("Arial", 10),\n    bg="#f8f9fa",\n    fg="#7f8c8d"\n)\ncount_label.pack()\n\n# Bottom frame for additional info\nbottom_frame = tk.Frame(root, bg="#f8f9fa")\nbottom_frame.pack(pady=5, padx=20, fill="x")\n\n# Show all products with prices\ndef show_price_list():\n    price_text = "Product Prices:\\n"\n    for product, price in products.items():\n        price_text += f"{product}: ${price:.2f}\\n"\n    return price_text\n\nprice_button = tk.Button(\n    bottom_frame,\n    text="Show Price List",\n    command=lambda: show_prices(),\n    bg="#3498db",\n    fg="white",\n    font=("Arial", 9),\n    padx=10\n)\nprice_button.pack(side="left")\n\ndef show_prices():\n    price_window = tk.Toplevel(root)\n    price_window.title("Price List")\n    price_window.geometry("300x400")\n    \n    tk.Label(\n        price_window,\n        text="Product Prices",\n        font=("Arial", 14, "bold")\n    ).pack(pady=10)\n    \n    price_listbox = tk.Listbox(price_window, font=("Arial", 10), width=30, height=15)\n    price_listbox.pack(padx=10, pady=10, fill="both", expand=True)\n    \n    for product, price in products.items():\n        price_listbox.insert("end", f"{product}: ${price:.2f}")\n    \n    tk.Button(\n        price_window,\n        text="Close",\n        command=price_window.destroy,\n        bg="#95a5a6",\n        fg="white",\n        padx=15\n    ).pack(pady=10)\n\n# Status bar\nstatus_label = tk.Label(\n    root,\n    text="Select products and click 'Add to Cart'",\n    font=("Arial", 10),\n    bg="#ecf0f1",\n    fg="#7f8c8d",\n    relief="sunken",\n    anchor="w",\n    padx=10\n)\nstatus_label.pack(side="bottom", fill="x")\n\nroot.mainloop()`,
+        "progressbar.py": `import tkinter as tk\nfrom tkinter import ttk\n\nroot = tk.Tk()\nroot.title("Widgets - Progressbar")\nroot.geometry("600x400")\nroot.resizable(False, False)\n\nfonts = ("Arial", 25, "bold")\n\ndef start_progress():\n    progress_bar.start() \n\ndef stop_progress():\n    progress_bar.stop()  \n\n\nprogress_bar = ttk.Progressbar(\n    root,\n    orient=tk.HORIZONTAL,\n    length=200,\n    mode='indeterminate'  \n)\nprogress_bar.pack(pady=50)\n\n\nbtn_frame = tk.Frame(root)\nbtn_frame.pack(pady=20)\n\ntk.Button(btn_frame, text="Start", command=start_progress, font=("Arial", 12)).pack(side=tk.LEFT, padx=10)\ntk.Button(btn_frame, text="Stop", command=stop_progress, font=("Arial", 12)).pack(side=tk.LEFT, padx=10)\n\nroot.mainloop()`,
+        "file-download-simulator.py": `import tkinter as tk\nfrom tkinter import ttk\nimport time\n\n# Create main window\nroot = tk.Tk()\nroot.title("File Download Simulator")\nroot.geometry("500x350")\nroot.configure(bg="#f0f4f8")\n\n# Variables\ndownload_progress = tk.IntVar(value=0)\nis_downloading = False\ndownload_speed = 100  # milliseconds per update\n\n# Header\ntk.Label(\n    root,\n    text="File Download Simulator",\n    font=("Arial", 18, "bold"),\n    bg="#f0f4f8",\n    fg="#2c3e50"\n).pack(pady=15)\n\n# File information\nfile_frame = tk.LabelFrame(\n    root,\n    text="File Information",\n    font=("Arial", 11, "bold"),\n    bg="#f0f4f8",\n    fg="#2c3e50"\n)\nfile_frame.pack(pady=5, padx=20, fill="x")\n\ntk.Label(\n    file_frame,\n    text="File: Python_Programming_Course.zip",\n    font=("Arial", 11),\n    bg="#f0f4f8",\n    fg="#34495e"\n).pack(anchor="w", padx=10, pady=2)\n\ntk.Label(\n    file_frame,\n    text="File Size: 1.2 GB",\n    font=("Arial", 11),\n    bg="#f0f4f8",\n    fg="#34495e"\n).pack(anchor="w", padx=10, pady=2)\n\ntk.Label(\n    file_frame,\n    text="Download Speed: 10 MB/s",\n    font=("Arial", 11),\n    bg="#f0f4f8",\n    fg="#34495e"\n).pack(anchor="w", padx=10, pady=2)\n\n# Progress bar\nprogress_frame = tk.LabelFrame(\n    root,\n    text="Download Progress",\n    font=("Arial", 11, "bold"),\n    bg="#f0f4f8",\n    fg="#2c3e50"\n)\nprogress_frame.pack(pady=10, padx=20, fill="x")\n\n# Progress bar (determinate mode - we know total size)\nprogress_bar = ttk.Progressbar(\n    progress_frame,\n    variable=download_progress,\n    maximum=100,\n    mode="determinate",\n    length=400\n)\nprogress_bar.pack(pady=10, padx=10)\n\n# Progress label\nprogress_label = tk.Label(\n    progress_frame,\n    text="0% Complete",\n    font=("Arial", 12, "bold"),\n    bg="#f0f4f8",\n    fg="#2980b9"\n)\nprogress_label.pack(pady=5)\n\n# Download details\ndetails_frame = tk.Frame(progress_frame, bg="#f0f4f8")\ndetails_frame.pack(pady=5)\n\n# Downloaded size\ndownloaded_label = tk.Label(\n    details_frame,\n    text="Downloaded: 0 MB",\n    font=("Arial", 10),\n    bg="#f0f4f8",\n    fg="#7f8c8d"\n)\ndownloaded_label.pack(side="left", padx=15)\n\n# Remaining time\ntime_label = tk.Label(\n    details_frame,\n    text="Remaining: --:--",\n    font=("Arial", 10),\n    bg="#f0f4f8",\n    fg="#7f8c8d"\n)\ntime_label.pack(side="left", padx=15)\n\n# Function to format time\ndef format_time(seconds):\n    mins = int(seconds // 60)\n    secs = int(seconds % 60)\n    return f"{mins:02d}:{secs:02d}"\n\n# Function to simulate download\ndef start_download():\n    global is_downloading\n    \n    if is_downloading:\n        return\n    \n    is_downloading = True\n    download_progress.set(0)\n    status_label.config(text="Downloading...", fg="#27ae60")\n    start_button.config(state="disabled", text="Downloading...")\n    pause_button.config(state="normal")\n    reset_button.config(state="disabled")\n    \n    # Calculate total time (simulated)\n    total_time = 100  # 100 steps at 100ms each = 10 seconds\n    start_time = time.time()\n    \n    def update_progress():\n        global is_downloading\n        \n        if not is_downloading:\n            return\n        \n        current = download_progress.get()\n        \n        if current < 100:\n            # Increase by 1%\n            new_value = current + 1\n            download_progress.set(new_value)\n            \n            # Update progress label\n            progress_label.config(text=f"{new_value}% Complete")\n            \n            # Update downloaded size (1.2 GB = 1200 MB)\n            downloaded_mb = (new_value / 100) * 1200\n            downloaded_label.config(text=f"Downloaded: {downloaded_mb:.1f} MB")\n            \n            # Update remaining time\n            elapsed = time.time() - start_time\n            remaining = (total_time - elapsed) * (1 - new_value / 100) / (new_value / 100 + 0.001)\n            if remaining > 0:\n                time_label.config(text=f"Remaining: {format_time(remaining)}")\n            else:\n                time_label.config(text="Remaining: 00:00")\n            \n            # Schedule next update\n            root.after(download_speed, update_progress)\n        else:\n            # Download complete\n            progress_label.config(text="100% Complete - Done!", fg="#27ae60")\n            downloaded_label.config(text="Downloaded: 1200.0 MB")\n            time_label.config(text="Remaining: 00:00")\n            status_label.config(text="Download complete!", fg="#27ae60")\n            start_button.config(state="normal", text="Start Download")\n            pause_button.config(state="disabled")\n            reset_button.config(state="normal")\n            is_downloading = False\n    \n    # Start the download\n    root.after(100, update_progress)\n\n# Function to pause download\ndef pause_download():\n    global is_downloading\n    if is_downloading:\n        is_downloading = False\n        status_label.config(text="Paused", fg="#e67e22")\n        start_button.config(text="Resume Download", state="normal")\n        pause_button.config(state="disabled")\n\n# Function to reset download\ndef reset_download():\n    global is_downloading\n    is_downloading = False\n    download_progress.set(0)\n    progress_label.config(text="0% Complete", fg="#2980b9")\n    downloaded_label.config(text="Downloaded: 0 MB")\n    time_label.config(text="Remaining: --:--")\n    status_label.config(text="Ready to download", fg="#7f8c8d")\n    start_button.config(text="Start Download", state="normal")\n    pause_button.config(state="disabled")\n    reset_button.config(state="disabled")\n\n# Button frame\nbutton_frame = tk.Frame(root, bg="#f0f4f8")\nbutton_frame.pack(pady=15)\n\nstart_button = tk.Button(\n    button_frame,\n    text="Start Download",\n    command=start_download,\n    bg="#27ae60",\n    fg="white",\n    font=("Arial", 11),\n    padx=20,\n    pady=8,\n    cursor="hand2"\n)\nstart_button.pack(side="left", padx=5)\n\npause_button = tk.Button(\n    button_frame,\n    text="Pause",\n    command=pause_download,\n    bg="#f39c12",\n    fg="white",\n    font=("Arial", 11),\n    padx=20,\n    pady=8,\n    state="disabled",\n    cursor="hand2"\n)\npause_button.pack(side="left", padx=5)\n\nreset_button = tk.Button(\n    button_frame,\n    text="Reset",\n    command=reset_download,\n    bg="#e74c3c",\n    fg="white",\n    font=("Arial", 11),\n    padx=20,\n    pady=8,\n    state="disabled",\n    cursor="hand2"\n)\nreset_button.pack(side="left", padx=5)\n\n# Status bar\nstatus_label = tk.Label(\n    root,\n    text="Ready to download",\n    font=("Arial", 10),\n    bg="#ecf0f1",\n    fg="#7f8c8d",\n    relief="sunken",\n    anchor="w",\n    padx=10\n)\nstatus_label.pack(side="bottom", fill="x")\n\nroot.mainloop()`,
+        "countdown-timer.py": `import tkinter as tk\nfrom tkinter import ttk\nimport time\n\n# Create main window\nroot = tk.Tk()\nroot.title("Countdown Timer")\nroot.geometry("400x350")\nroot.configure(bg="#f0f0f0")\n\n# Title\ntk.Label(\n    root,\n    text="Countdown Timer",\n    font=("Arial", 16, "bold"),\n    bg="#f0f0f0",\n    fg="#2c3e50"\n).pack(pady=15)\n\n# Time input\ntime_frame = tk.Frame(root, bg="#f0f0f0")\ntime_frame.pack(pady=5)\n\ntk.Label(\n    time_frame,\n    text="Set time (seconds):",\n    font=("Arial", 11),\n    bg="#f0f0f0"\n).pack(side="left", padx=5)\n\n# Spinbox to choose seconds\nseconds_spin = tk.Spinbox(\n    time_frame,\n    from_=5,\n    to=60,\n    width=5,\n    font=("Arial", 12)\n)\nseconds_spin.pack(side="left", padx=5)\nseconds_spin.delete(0, "end")\nseconds_spin.insert(0, "10")\n\n# Progress bar\nprogress = ttk.Progressbar(\n    root,\n    orient="horizontal",\n    length=300,\n    mode="determinate",\n    maximum=100\n)\nprogress.pack(pady=20)\n\n# Label to show percentage\npercent_label = tk.Label(\n    root,\n    text="100%",\n    font=("Arial", 14, "bold"),\n    bg="#f0f0f0",\n    fg="#2980b9"\n)\npercent_label.pack(pady=5)\n\n# Label to show time remaining\ntime_label = tk.Label(\n    root,\n    text="Time remaining: 10 seconds",\n    font=("Arial", 12),\n    bg="#f0f0f0",\n    fg="#2c3e50"\n)\ntime_label.pack(pady=5)\n\n# Status label\nstatus_label = tk.Label(\n    root,\n    text="Ready",\n    font=("Arial", 11),\n    bg="#f0f0f0",\n    fg="#7f8c8d"\n)\nstatus_label.pack(pady=5)\n\n# Function to start countdown\ndef start_countdown():\n    # Get the number of seconds\n    try:\n        total_seconds = int(seconds_spin.get())\n        if total_seconds < 1:\n            status_label.config(text="Please enter a number >= 1", fg="#e74c3c")\n            return\n    except:\n        status_label.config(text="Please enter a valid number", fg="#e74c3c")\n        return\n    \n    # Disable controls during countdown\n    start_button.config(state="disabled")\n    seconds_spin.config(state="disabled")\n    status_label.config(text="Counting down...", fg="#27ae60")\n    \n    # Reset progress to 100%\n    progress["value"] = 100\n    percent_label.config(text="100%")\n    \n    # Countdown loop\n    for remaining in range(total_seconds, -1, -1):\n        # Calculate percentage\n        percent = (remaining / total_seconds) * 100\n        progress["value"] = percent\n        percent_label.config(text=f"{int(percent)}%")\n        time_label.config(text=f"Time remaining: {remaining} seconds")\n        root.update()\n        time.sleep(1)  # Wait 1 second\n    \n    # Countdown complete\n    progress["value"] = 0\n    percent_label.config(text="0%", fg="#e74c3c")\n    time_label.config(text="Time's up!", fg="#e74c3c")\n    status_label.config(text="Countdown finished!", fg="#e74c3c")\n    \n    # Re-enable controls\n    start_button.config(state="normal")\n    seconds_spin.config(state="normal")\n\n# Start button\nstart_button = tk.Button(\n    root,\n    text="Start Countdown",\n    command=start_countdown,\n    bg="#e67e22",\n    fg="white",\n    font=("Arial", 12),\n    padx=20,\n    pady=8,\n    cursor="hand2"\n)\nstart_button.pack(pady=10)\n\n# Reset button\ndef reset_timer():\n    progress["value"] = 100\n    percent_label.config(text="100%", fg="#2980b9")\n    time_label.config(text=f"Time remaining: {seconds_spin.get()} seconds", fg="#2c3e50")\n    status_label.config(text="Ready", fg="#7f8c8d")\n    start_button.config(state="normal")\n    seconds_spin.config(state="normal")\n\nreset_button = tk.Button(\n    root,\n    text="Reset",\n    command=reset_timer,\n    bg="#95a5a6",\n    fg="white",\n    font=("Arial", 10),\n    padx=15,\n    pady=5\n)\nreset_button.pack()\n\nroot.mainloop()`,
+        "radiobutton.py": `import tkinter as tk\n\n\n\n\n\nroot = tk.Tk()\nroot.title("Widgets")\nroot.geometry("600x400")\nroot.resizable(False,False)\n\nfonts = ("Arial", 25, "bold")\n\ndef show_selection():\n    selected = radio_var.get()\n    label.config(text=f"You selected: {selected}")\n\n\nradio_var = tk.StringVar()\nradio_var.set("Option 1")\n\n\nradio1 = tk.Radiobutton(root, text="Morning Shift", variable=radio_var, value="Morning Shift",font=fonts)\nradio1.pack(pady=5)\n\nradio2 = tk.Radiobutton(root, text="Evening Shift", variable=radio_var, value="Evening Shift",font=fonts)\nradio2.pack(pady=5)\n\nradio3 = tk.Radiobutton(root, text="Graveyard Shift", variable=radio_var, value="Graveyard Shift",font=fonts)\nradio3.pack(pady=5)\n\n\nbutton = tk.Button(root, text="Show Selection", command=show_selection, font=fonts, bg="yellow")\nbutton.pack(pady=10)\n\n\nlabel = tk.Label(root, text="Select an option", font=fonts)\nlabel.pack(pady=10)\n\nroot.mainloop()`,
+        "payment-method.py": `import tkinter as tk\nfrom tkinter import ttk\n\n# Create main window\nroot = tk.Tk()\nroot.title("Payment Method Selector")\nroot.geometry("500x600")\nroot.configure(bg="#f0f0f0")\n\n# Title\ntk.Label(\n    root,\n    text="Payment Method",\n    font=("Arial", 18, "bold"),\n    bg="#f0f0f0",\n    fg="#2c3e50"\n).pack(pady=15)\n\n# Variable to store selected payment method\n# All radiobuttons with the same variable are in the SAME group\npayment_method = tk.StringVar(value="cash")  # Default selection\n\n# ===== DEFINE FUNCTIONS FIRST =====\n\n# Function to enable/disable fields based on selection\ndef update_fields():\n    method = payment_method.get()\n    \n    # Enable/disable based on payment method\n    if method == "cash":\n        cash_entry.config(state="normal", bg="white")\n        credit_entry.config(state="disabled", bg="#e0e0e0")\n        crypto_entry.config(state="disabled", bg="#e0e0e0")\n        status_label.config(text="Selected: Cash - Enter amount", fg="#27ae60")\n    \n    elif method == "credit":\n        cash_entry.config(state="disabled", bg="#e0e0e0")\n        credit_entry.config(state="normal", bg="white")\n        crypto_entry.config(state="disabled", bg="#e0e0e0")\n        status_label.config(text="Selected: Credit Card - Enter card number", fg="#27ae60")\n    \n    elif method == "crypto":\n        cash_entry.config(state="disabled", bg="#e0e0e0")\n        credit_entry.config(state="disabled", bg="#e0e0e0")\n        crypto_entry.config(state="normal", bg="white")\n        status_label.config(text="Selected: Crypto - Enter wallet address", fg="#27ae60")\n\n# Function to reset the form\ndef reset_form():\n    payment_method.set("cash")\n    cash_entry.delete(0, "end")\n    credit_entry.delete(0, "end")\n    crypto_entry.delete(0, "end")\n    update_fields()\n    status_label.config(text="Form reset", fg="#7f8c8d")\n\n# Function to show selected payment method\ndef show_selection():\n    method = payment_method.get()\n    if method == "cash":\n        amount = cash_entry.get()\n        if amount:\n            status_label.config(text=f"Paying {amount} THB in Cash", fg="#2980b9")\n        else:\n            status_label.config(text="Please enter amount", fg="#e74c3c")\n    elif method == "credit":\n        card = credit_entry.get()\n        if len(card) >= 4:\n            status_label.config(text=f"Paying with Credit Card ending in {card[-4:]}", fg="#2980b9")\n        else:\n            status_label.config(text="Please enter card number", fg="#e74c3c")\n    elif method == "crypto":\n        wallet = crypto_entry.get()\n        if wallet:\n            status_label.config(text=f"Paying with Crypto wallet: {wallet[:6]}...", fg="#2980b9")\n        else:\n            status_label.config(text="Please enter wallet address", fg="#e74c3c")\n\n# ===== NOW BUILD THE GUI =====\n\n# Frame for payment options\npayment_frame = tk.LabelFrame(\n    root,\n    text="Select Payment Method",\n    font=("Arial", 12, "bold"),\n    bg="#f0f0f0",\n    fg="#2c3e50"\n)\npayment_frame.pack(pady=10, padx=20, fill="x")\n\n# Radiobuttons - all use the SAME variable\ntk.Radiobutton(\n    payment_frame,\n    text="Cash",\n    variable=payment_method,\n    value="cash",\n    font=("Arial", 11),\n    bg="#f0f0f0",\n    command=update_fields\n).pack(anchor="w", padx=20, pady=5)\n\ntk.Radiobutton(\n    payment_frame,\n    text="Credit Card",\n    variable=payment_method,\n    value="credit",\n    font=("Arial", 11),\n    bg="#f0f0f0",\n    command=update_fields\n).pack(anchor="w", padx=20, pady=5)\n\ntk.Radiobutton(\n    payment_frame,\n    text="Crypto Currency",\n    variable=payment_method,\n    value="crypto",\n    font=("Arial", 11),\n    bg="#f0f0f0",\n    command=update_fields\n).pack(anchor="w", padx=20, pady=5)\n\n# Frame for payment details\ndetails_frame = tk.LabelFrame(\n    root,\n    text="Payment Details",\n    font=("Arial", 12, "bold"),\n    bg="#f0f0f0",\n    fg="#2c3e50"\n)\ndetails_frame.pack(pady=10, padx=20, fill="x")\n\n# Cash details\ncash_frame = tk.Frame(details_frame, bg="#f0f0f0")\ncash_frame.pack(fill="x", pady=5)\n\ntk.Label(\n    cash_frame,\n    text="Amount:",\n    font=("Arial", 11),\n    bg="#f0f0f0"\n).pack(side="left", padx=5)\n\ncash_entry = tk.Entry(cash_frame, width=15, font=("Arial", 11))\ncash_entry.pack(side="left", padx=5)\n\ntk.Label(\n    cash_frame,\n    text="THB",\n    font=("Arial", 11),\n    bg="#f0f0f0"\n).pack(side="left", padx=5)\n\n# Credit Card details\ncredit_frame = tk.Frame(details_frame, bg="#f0f0f0")\ncredit_frame.pack(fill="x", pady=5)\n\ntk.Label(\n    credit_frame,\n    text="Card Number:",\n    font=("Arial", 11),\n    bg="#f0f0f0"\n).pack(side="left", padx=5)\n\ncredit_entry = tk.Entry(credit_frame, width=20, font=("Arial", 11))\ncredit_entry.pack(side="left", padx=5)\n\n# Crypto details\ncrypto_frame = tk.Frame(details_frame, bg="#f0f0f0")\ncrypto_frame.pack(fill="x", pady=5)\n\ntk.Label(\n    crypto_frame,\n    text="Wallet Address:",\n    font=("Arial", 11),\n    bg="#f0f0f0"\n).pack(side="left", padx=5)\n\ncrypto_entry = tk.Entry(crypto_frame, width=20, font=("Arial", 11))\ncrypto_entry.pack(side="left", padx=5)\n\n# Button frame\nbutton_frame = tk.Frame(root, bg="#f0f0f0")\nbutton_frame.pack(pady=15)\n\ntk.Button(\n    button_frame,\n    text="Pay Now",\n    command=show_selection,\n    bg="#27ae60",\n    fg="white",\n    font=("Arial", 12),\n    padx=20,\n    pady=8,\n    cursor="hand2"\n).pack(side="left", padx=5)\n\ntk.Button(\n    button_frame,\n    text="Reset",\n    command=reset_form,\n    bg="#95a5a6",\n    fg="white",\n    font=("Arial", 10),\n    padx=15,\n    pady=5\n).pack(side="left", padx=5)\n\n# Status label\nstatus_label = tk.Label(\n    root,\n    text="Select a payment method",\n    font=("Arial", 11),\n    bg="#f0f0f0",\n    fg="#7f8c8d"\n)\nstatus_label.pack(pady=10)\n\n# Initialize fields (call the function after it's defined)\nupdate_fields()\n\nroot.mainloop()`,
+        "scale.py": `import tkinter as tk\n\nroot = tk.Tk()\nroot.title("Widgets - Scale")\nroot.geometry("600x400")\nroot.resizable(False, False)\n\nfonts = ("Arial", 25, "bold")\n\ndef show_value():\n    value = scale.get()\n    label.config(text=f"Value: {value}")\n\n\nscale = tk.Scale(\n    root,\n    from_=0,      \n    to=100,       \n    orient=tk.HORIZONTAL,\n    length=300,\n    font=("Arial", 12)\n)\nscale.pack(pady=30)\n\n\nbutton = tk.Button(root, text="Volume", command=show_value, font=("Arial", 12))\nbutton.pack(pady=10)\n\n\nlabel = tk.Label(root, text="Move the slider", font=fonts)\nlabel.pack(pady=10)\n\nroot.mainloop()`,
+        "color-mixer.py": `import tkinter as tk\nfrom tkinter import ttk\n\n# Create main window\nroot = tk.Tk()\nroot.title("Color Mixer")\nroot.geometry("500x500")\nroot.configure(bg="#f0f0f0")\n\n# Title\ntk.Label(\n    root,\n    text="Color Mixer",\n    font=("Arial", 18, "bold"),\n    bg="#f0f0f0",\n    fg="#2c3e50"\n).pack(pady=15)\n\ntk.Label(\n    root,\n    text="Move the sliders to mix colors",\n    font=("Arial", 11),\n    bg="#f0f0f0",\n    fg="#7f8c8d"\n).pack()\n\n# Variables for RGB values\nred_value = tk.IntVar(value=128)\ngreen_value = tk.IntVar(value=128)\nblue_value = tk.IntVar(value=128)\n\n# Frame for color display\ncolor_display = tk.Frame(\n    root,\n    width=300,\n    height=150,\n    bg="#808080",\n    relief="sunken"\n)\ncolor_display.pack(pady=15, padx=20)\n\n# Prevent the frame from shrinking\ncolor_display.pack_propagate(False)\n\n# Label inside color display\ncolor_label = tk.Label(\n    color_display,\n    text="Color Preview",\n    font=("Arial", 14, "bold"),\n    bg="#808080",\n    fg="white"\n)\ncolor_label.pack(expand=True)\n\n# Function to update color\ndef update_color(*args):\n    r = red_value.get()\n    g = green_value.get()\n    b = blue_value.get()\n    \n    # Convert to hex color\n    hex_color = f"#{r:02x}{g:02x}{b:02x}"\n    \n    # Update background\n    color_display.config(bg=hex_color)\n    color_label.config(bg=hex_color)\n    \n    # Update RGB labels\n    rgb_label.config(text=f"RGB: ({r}, {g}, {b})")\n    hex_label.config(text=f"HEX: {hex_color}")\n    \n    # Auto-adjust text color for visibility\n    brightness = (r * 299 + g * 587 + b * 114) / 1000\n    if brightness > 128:\n        color_label.config(fg="black")\n    else:\n        color_label.config(fg="white")\n\n# Frame for sliders\nslider_frame = tk.LabelFrame(\n    root,\n    text="Adjust Colors",\n    font=("Arial", 12, "bold"),\n    bg="#f0f0f0",\n    fg="#2c3e50"\n)\nslider_frame.pack(pady=10, padx=20, fill="x")\n\n# Red Slider\nred_frame = tk.Frame(slider_frame, bg="#f0f0f0")\nred_frame.pack(fill="x", pady=5, padx=10)\n\ntk.Label(\n    red_frame,\n    text="Red:",\n    font=("Arial", 11, "bold"),\n    bg="#f0f0f0",\n    fg="#e74c3c",\n    width=6\n).pack(side="left")\n\nred_slider = tk.Scale(\n    red_frame,\n    from_=0,\n    to=255,\n    orient="horizontal",\n    variable=red_value,\n    command=update_color,\n    bg="#f0f0f0",\n    length=300,\n    tickinterval=50,\n    resolution=1\n)\nred_slider.pack(side="left", padx=10)\n\nred_label = tk.Label(\n    red_frame,\n    text="128",\n    font=("Arial", 10),\n    bg="#f0f0f0",\n    width=4\n)\nred_label.pack(side="left")\n\n# Green Slider\ngreen_frame = tk.Frame(slider_frame, bg="#f0f0f0")\ngreen_frame.pack(fill="x", pady=5, padx=10)\n\ntk.Label(\n    green_frame,\n    text="Green:",\n    font=("Arial", 11, "bold"),\n    bg="#f0f0f0",\n    fg="#27ae60",\n    width=6\n).pack(side="left")\n\ngreen_slider = tk.Scale(\n    green_frame,\n    from_=0,\n    to=255,\n    orient="horizontal",\n    variable=green_value,\n    command=update_color,\n    bg="#f0f0f0",\n    length=300,\n    tickinterval=50,\n    resolution=1\n)\ngreen_slider.pack(side="left", padx=10)\n\ngreen_label = tk.Label(\n    green_frame,\n    text="128",\n    font=("Arial", 10),\n    bg="#f0f0f0",\n    width=4\n)\ngreen_label.pack(side="left")\n\n# Blue Slider\nblue_frame = tk.Frame(slider_frame, bg="#f0f0f0")\nblue_frame.pack(fill="x", pady=5, padx=10)\n\ntk.Label(\n    blue_frame,\n    text="Blue:",\n    font=("Arial", 11, "bold"),\n    bg="#f0f0f0",\n    fg="#2980b9",\n    width=6\n).pack(side="left")\n\nblue_slider = tk.Scale(\n    blue_frame,\n    from_=0,\n    to=255,\n    orient="horizontal",\n    variable=blue_value,\n    command=update_color,\n    bg="#f0f0f0",\n    length=300,\n    tickinterval=50,\n    resolution=1\n)\nblue_slider.pack(side="left", padx=10)\n\nblue_label = tk.Label(\n    blue_frame,\n    text="128",\n    font=("Arial", 10),\n    bg="#f0f0f0",\n    width=4\n)\nblue_label.pack(side="left")\n\n# Function to update labels when slider moves\ndef update_labels(*args):\n    red_label.config(text=str(red_value.get()))\n    green_label.config(text=str(green_value.get()))\n    blue_label.config(text=str(blue_value.get()))\n\n# Bind variable updates to update labels\nred_value.trace("w", update_labels)\ngreen_value.trace("w", update_labels)\nblue_value.trace("w", update_labels)\n\n# Info frame\ninfo_frame = tk.LabelFrame(\n    root,\n    text="Color Information",\n    font=("Arial", 12, "bold"),\n    bg="#f0f0f0",\n    fg="#2c3e50"\n)\ninfo_frame.pack(pady=10, padx=20, fill="x")\n\n# RGB values\nrgb_label = tk.Label(\n    info_frame,\n    text="RGB: (128, 128, 128)",\n    font=("Arial", 11),\n    bg="#f0f0f0",\n    fg="#2c3e50"\n)\nrgb_label.pack(pady=2)\n\n# HEX value\nhex_label = tk.Label(\n    info_frame,\n    text="HEX: #808080",\n    font=("Arial", 11),\n    bg="#f0f0f0",\n    fg="#2c3e50"\n)\nhex_label.pack(pady=2)\n\n# Reset button\ndef reset_colors():\n    red_value.set(128)\n    green_value.set(128)\n    blue_value.set(128)\n    update_color()\n\ntk.Button(\n    root,\n    text="Reset to Gray",\n    command=reset_colors,\n    bg="#95a5a6",\n    fg="white",\n    font=("Arial", 10),\n    padx=15,\n    pady=5\n).pack(pady=10)\n\n# Initialize color\nupdate_color()\n\nroot.mainloop()`,
+        "spinbox.py": `import tkinter as tk\n\n\nroot = tk.Tk()\nroot.title("Widgets")\nroot.geometry("600x400")\nroot.resizable(False,False)\n\nfonts = ("Arial", 25, "bold")\n\ndef show_value():\n    value = spinbox.get()\n    label.config(text=f"Selected: {value}")\n\n\nspinbox = tk.Spinbox(\n    root,\n    from_=0,      \n    to=10,        \n    width=10,\n    font=fonts\n)\nspinbox.pack(pady=20)\n\ntk.Button(root, text="Show Value", command=show_value, font=fonts).pack(pady=10)\n\nlabel = tk.Label(root, text="Select a value", font=fonts)\nlabel.pack()\n\n\nroot.mainloop()`,
+        "ticket-quantity.py": `import tkinter as tk\nfrom tkinter import ttk\n\n# Create main window\nroot = tk.Tk()\nroot.title("Movie Ticket Selector")\nroot.geometry("450x400")\nroot.configure(bg="#f0f0f0")\n\n# Ticket prices in Thai Baht\nTICKET_PRICE = 180  # Baht per ticket\n\n# Variables\nticket_quantity = tk.IntVar(value=1)\n\n# ===== DEFINE FUNCTIONS FIRST =====\n\n# Function to update total\ndef update_total():\n    qty = ticket_quantity.get()\n    total = qty * TICKET_PRICE\n    \n    # Update labels\n    qty_label.config(text=f"{qty} ticket(s)")\n    total_label.config(text=f"{total:,.2f} THB")\n    \n    # Update status\n    status_label.config(\n        text=f"Selected {qty} ticket(s) - Total: {total:,.2f} THB",\n        fg="#27ae60"\n    )\n\n# Function to set quantity from buttons\ndef set_quantity(value):\n    ticket_quantity.set(value)\n    update_total()\n\n# ===== NOW BUILD THE GUI =====\n\n# Title\ntk.Label(\n    root,\n    text="Movie Ticket Selector",\n    font=("Arial", 18, "bold"),\n    bg="#f0f0f0",\n    fg="#2c3e50"\n).pack(pady=15)\n\n# Movie info frame\nmovie_frame = tk.LabelFrame(\n    root,\n    text="Movie Details",\n    font=("Arial", 12, "bold"),\n    bg="#f0f0f0",\n    fg="#2c3e50"\n)\nmovie_frame.pack(pady=10, padx=20, fill="x")\n\ntk.Label(\n    movie_frame,\n    text="Movie: Avengers: Endgame",\n    font=("Arial", 12),\n    bg="#f0f0f0",\n    fg="#34495e"\n).pack(anchor="w", padx=10, pady=2)\n\ntk.Label(\n    movie_frame,\n    text=f"Ticket Price: {TICKET_PRICE} THB",\n    font=("Arial", 12),\n    bg="#f0f0f0",\n    fg="#34495e"\n).pack(anchor="w", padx=10, pady=2)\n\n# Ticket quantity frame\nquantity_frame = tk.LabelFrame(\n    root,\n    text="Ticket Quantity",\n    font=("Arial", 12, "bold"),\n    bg="#f0f0f0",\n    fg="#2c3e50"\n)\nquantity_frame.pack(pady=10, padx=20, fill="x")\n\n# Frame for spinbox and buttons\nspin_frame = tk.Frame(quantity_frame, bg="#f0f0f0")\nspin_frame.pack(pady=15)\n\ntk.Label(\n    spin_frame,\n    text="Number of Tickets:",\n    font=("Arial", 11),\n    bg="#f0f0f0"\n).pack(side="left", padx=5)\n\n# Spinbox for quantity (1-10)\nticket_spinbox = tk.Spinbox(\n    spin_frame,\n    from_=1,\n    to=10,\n    width=5,\n    font=("Arial", 14),\n    textvariable=ticket_quantity,\n    command=update_total  # Updates when arrows are clicked\n)\nticket_spinbox.pack(side="left", padx=10)\n\n# Quick buttons\nquick_frame = tk.Frame(quantity_frame, bg="#f0f0f0")\nquick_frame.pack(pady=5)\n\ntk.Button(\n    quick_frame,\n    text="1",\n    command=lambda: set_quantity(1),\n    bg="#3498db",\n    fg="white",\n    width=4,\n    font=("Arial", 10)\n).pack(side="left", padx=2)\n\ntk.Button(\n    quick_frame,\n    text="2",\n    command=lambda: set_quantity(2),\n    bg="#3498db",\n    fg="white",\n    width=4,\n    font=("Arial", 10)\n).pack(side="left", padx=2)\n\ntk.Button(\n    quick_frame,\n    text="5",\n    command=lambda: set_quantity(5),\n    bg="#3498db",\n    fg="white",\n    width=4,\n    font=("Arial", 10)\n).pack(side="left", padx=2)\n\ntk.Button(\n    quick_frame,\n    text="10",\n    command=lambda: set_quantity(10),\n    bg="#3498db",\n    fg="white",\n    width=4,\n    font=("Arial", 10)\n).pack(side="left", padx=2)\n\n# Summary frame\nsummary_frame = tk.LabelFrame(\n    root,\n    text="Order Summary",\n    font=("Arial", 12, "bold"),\n    bg="#f0f0f0",\n    fg="#2c3e50"\n)\nsummary_frame.pack(pady=10, padx=20, fill="x")\n\n# Display labels\ntk.Label(\n    summary_frame,\n    text="Quantity:",\n    font=("Arial", 11),\n    bg="#f0f0f0"\n).pack(anchor="w", padx=10, pady=2)\n\nqty_label = tk.Label(\n    summary_frame,\n    text="1 ticket(s)",\n    font=("Arial", 12, "bold"),\n    bg="#f0f0f0",\n    fg="#2980b9"\n)\nqty_label.pack(anchor="w", padx=20, pady=2)\n\ntk.Label(\n    summary_frame,\n    text="Total Price:",\n    font=("Arial", 11),\n    bg="#f0f0f0"\n).pack(anchor="w", padx=10, pady=2)\n\ntotal_label = tk.Label(\n    summary_frame,\n    text=f"{TICKET_PRICE:,.2f} THB",\n    font=("Arial", 16, "bold"),\n    bg="#f0f0f0",\n    fg="#27ae60"\n)\ntotal_label.pack(anchor="w", padx=20, pady=5)\n\n# Status label\nstatus_label = tk.Label(\n    root,\n    text="Select ticket quantity",\n    font=("Arial", 11),\n    bg="#f0f0f0",\n    fg="#7f8c8d"\n)\nstatus_label.pack(pady=10)\n\n# Initialize\nupdate_total()\n\nroot.mainloop()`,
+        "entry.py": `import tkinter as tk\n\nroot = tk.Tk()\nroot.title("Widgets")\nroot.geometry("600x400")\nroot.resizable(False,False)\n\nfonts = ("Arial", 25, "bold")\n\ndef click():\n    my_text = int(entry1.get())\n    total = my_text * 5\n    label_output.config(text = f"{total}")\n    entry1.delete(0,tk.END)\n\ndef clear_me():        \n    label_output.config(text = "Output here...")\n    entry1.delete(0,tk.END)\n\n\nlabel = tk.Label(root, text="Enter Integer", font=fonts)\nlabel.pack()\n\nentry1 = tk.Entry(root, font=fonts)\nentry1.pack()\n\nbutton1 = tk.Button(root,text="Click Me!", font = fonts, command=click)\nbutton1.pack()\n\nbutton2 = tk.Button(root,text="Clear Me!", font= fonts, command=clear_me)\nbutton2.pack()\n\nlabel_output = tk.Label(root, text="Output here...", font=fonts)\nlabel_output.pack()\n\nroot.mainloop()`,
+        "login-form.py": `import tkinter as tk\nfrom tkinter import ttk\n\n# Create main window\nroot = tk.Tk()\nroot.title("Login Form")\nroot.geometry("450x400")\nroot.configure(bg="#f0f0f0")\n\n# ===== DEFINE FUNCTIONS FIRST =====\n\n# Function to toggle password visibility\ndef toggle_password():\n    if show_password_var.get() == 1:\n        # Show password\n        password_entry.config(show="")\n        toggle_button.config(text="Hide Password")\n    else:\n        # Hide password\n        password_entry.config(show="*")\n        toggle_button.config(text="Show Password")\n\n# Function to handle login\ndef login():\n    username = username_entry.get()\n    password = password_entry.get()\n    \n    if username == "" or password == "":\n        status_label.config(text="Please enter both username and password", fg="#e74c3c")\n    elif username == "admin" and password == "password123":\n        status_label.config(text="Login Successful! Welcome admin!", fg="#27ae60")\n    else:\n        status_label.config(text="Invalid username or password!", fg="#e74c3c")\n\n# Function to clear the form\ndef clear_form():\n    username_entry.delete(0, "end")\n    password_entry.delete(0, "end")\n    show_password_var.set(0)\n    password_entry.config(show="*")\n    toggle_button.config(text="Show Password")\n    status_label.config(text="Form cleared", fg="#7f8c8d")\n\n# ===== NOW BUILD THE GUI =====\n\n# Title\ntk.Label(\n    root,\n    text="Login Form",\n    font=("Arial", 20, "bold"),\n    bg="#f0f0f0",\n    fg="#2c3e50"\n).pack(pady=20)\n\n# Login frame\nlogin_frame = tk.LabelFrame(\n    root,\n    text="Enter Your Credentials",\n    font=("Arial", 12, "bold"),\n    bg="#f0f0f0",\n    fg="#2c3e50"\n)\nlogin_frame.pack(pady=10, padx=30, fill="x")\n\n# Username\ntk.Label(\n    login_frame,\n    text="Username:",\n    font=("Arial", 11),\n    bg="#f0f0f0",\n    fg="#2c3e50"\n).pack(anchor="w", padx=10, pady=(10,2))\n\nusername_entry = tk.Entry(\n    login_frame,\n    font=("Arial", 12),\n    width=25\n)\nusername_entry.pack(padx=10, pady=5, fill="x")\n\n# Password\ntk.Label(\n    login_frame,\n    text="Password:",\n    font=("Arial", 11),\n    bg="#f0f0f0",\n    fg="#2c3e50"\n).pack(anchor="w", padx=10, pady=(10,2))\n\n# Password entry with hidden text\npassword_entry = tk.Entry(\n    login_frame,\n    font=("Arial", 12),\n    width=25,\n    show="*"  # Hides password with asterisks\n)\npassword_entry.pack(padx=10, pady=5, fill="x")\n\n# Show password checkbox\nshow_password_var = tk.IntVar(value=0)\n\ntoggle_button = tk.Checkbutton(\n    login_frame,\n    text="Show Password",\n    variable=show_password_var,\n    command=toggle_password,  # This will work now\n    bg="#f0f0f0",\n    font=("Arial", 10)\n)\ntoggle_button.pack(anchor="w", padx=10, pady=5)\n\n# Button frame\nbutton_frame = tk.Frame(root, bg="#f0f0f0")\nbutton_frame.pack(pady=20)\n\ntk.Button(\n    button_frame,\n    text="Login",\n    command=login,  # This will work now\n    bg="#27ae60",\n    fg="white",\n    font=("Arial", 12),\n    padx=25,\n    pady=8,\n    cursor="hand2"\n).pack(side="left", padx=5)\n\ntk.Button(\n    button_frame,\n    text="Clear",\n    command=clear_form,  # This will work now\n    bg="#95a5a6",\n    fg="white",\n    font=("Arial", 12),\n    padx=25,\n    pady=8,\n    cursor="hand2"\n).pack(side="left", padx=5)\n\n# Status label\nstatus_label = tk.Label(\n    root,\n    text="Enter username and password",\n    font=("Arial", 11),\n    bg="#f0f0f0",\n    fg="#7f8c8d"\n)\nstatus_label.pack(pady=10)\n\n# Hint label\ntk.Label(\n    root,\n    text="Hint: Use 'admin' as username and 'password123' as password",\n    font=("Arial", 9),\n    bg="#f0f0f0",\n    fg="#95a5a6"\n).pack(pady=5)\n\nroot.mainloop()`,
+        "live-search-filter.py": `import tkinter as tk\nfrom tkinter import ttk\n\n# Create main window\nroot = tk.Tk()\nroot.title("Live Search Filter")\nroot.geometry("500x450")\nroot.configure(bg="#f0f0f0")\n\n# List of items to search through\nfruits = [\n    "Apple", "Apricot", "Avocado",\n    "Banana", "Blackberry", "Blueberry",\n    "Cherry", "Coconut", "Cranberry",\n    "Durian", "Dragonfruit", "Date",\n    "Elderberry", "Fig", "Grape",\n    "Grapefruit", "Guava", "Kiwi",\n    "Lemon", "Lime", "Lychee",\n    "Mango", "Mangosteen", "Melon",\n    "Orange", "Papaya", "Passionfruit",\n    "Peach", "Pear", "Pineapple",\n    "Plum", "Pomegranate", "Raspberry",\n    "Strawberry", "Tangerine", "Watermelon"\n]\n\n# ===== DEFINE FUNCTIONS FIRST =====\n\n# Function to filter the listbox\ndef filter_list(*args):\n    search_text = search_entry.get().lower()\n    \n    # Clear the listbox\n    listbox.delete(0, "end")\n    \n    # Add items that match the search\n    if search_text == "":\n        # Show all items\n        for item in fruits:\n            listbox.insert("end", item)\n    else:\n        # Show only matching items\n        for item in fruits:\n            if search_text in item.lower():\n                listbox.insert("end", item)\n    \n    # Update count label\n    count = listbox.size()\n    count_label.config(text=f"Found {count} items")\n\n# Function to show selected item\ndef show_selection():\n    selection = listbox.curselection()\n    if selection:\n        item = listbox.get(selection[0])\n        status_label.config(text=f"Selected: {item}", fg="#2980b9")\n    else:\n        status_label.config(text="Please select an item", fg="#e67e22")\n\n# ===== NOW BUILD THE GUI =====\n\n# Title\ntk.Label(\n    root,\n    text="Live Search Filter",\n    font=("Arial", 18, "bold"),\n    bg="#f0f0f0",\n    fg="#2c3e50"\n).pack(pady=15)\n\ntk.Label(\n    root,\n    text="Type in the search box to filter the list",\n    font=("Arial", 11),\n    bg="#f0f0f0",\n    fg="#7f8c8d"\n).pack()\n\n# Search frame\nsearch_frame = tk.LabelFrame(\n    root,\n    text="Search",\n    font=("Arial", 12, "bold"),\n    bg="#f0f0f0",\n    fg="#2c3e50"\n)\nsearch_frame.pack(pady=10, padx=20, fill="x")\n\n# Search entry\ntk.Label(\n    search_frame,\n    text="Type to search:",\n    font=("Arial", 11),\n    bg="#f0f0f0"\n).pack(anchor="w", padx=10, pady=(10,2))\n\nsearch_entry = tk.Entry(\n    search_frame,\n    font=("Arial", 12),\n    width=30\n)\nsearch_entry.pack(padx=10, pady=5, fill="x")\n\n# Bind the search to update on every key press\nsearch_entry.bind("<KeyRelease>", filter_list)\n\n# Listbox frame\nlistbox_frame = tk.LabelFrame(\n    root,\n    text="Results",\n    font=("Arial", 12, "bold"),\n    bg="#f0f0f0",\n    fg="#2c3e50"\n)\nlistbox_frame.pack(pady=10, padx=20, fill="both", expand=True)\n\n# Create listbox with scrollbar\nlistbox_scrollbar = tk.Scrollbar(listbox_frame)\nlistbox_scrollbar.pack(side="right", fill="y")\n\nlistbox = tk.Listbox(\n    listbox_frame,\n    selectmode="browse",\n    font=("Arial", 11),\n    bg="#ffffff",\n    yscrollcommand=listbox_scrollbar.set,\n    height=10\n)\nlistbox.pack(side="left", fill="both", expand=True, padx=5, pady=5)\n\nlistbox_scrollbar.config(command=listbox.yview)\n\n# Insert all items initially\nfor item in fruits:\n    listbox.insert("end", item)\n\n# Count label\ncount_label = tk.Label(\n    root,\n    text=f"Found {len(fruits)} items",\n    font=("Arial", 11),\n    bg="#f0f0f0",\n    fg="#7f8c8d"\n)\ncount_label.pack(pady=5)\n\n# Button frame\nbutton_frame = tk.Frame(root, bg="#f0f0f0")\nbutton_frame.pack(pady=10)\n\ntk.Button(\n    button_frame,\n    text="Show Selected",\n    command=show_selection,\n    bg="#3498db",\n    fg="white",\n    font=("Arial", 11),\n    padx=15,\n    pady=5,\n    cursor="hand2"\n).pack(side="left", padx=5)\n\ntk.Button(\n    button_frame,\n    text="Clear Search",\n    command=lambda: clear_search(),\n    bg="#95a5a6",\n    fg="white",\n    font=("Arial", 11),\n    padx=15,\n    pady=5,\n    cursor="hand2"\n).pack(side="left", padx=5)\n\ndef clear_search():\n    search_entry.delete(0, "end")\n    filter_list()\n\n# Status label\nstatus_label = tk.Label(\n    root,\n    text="Type to search or select an item",\n    font=("Arial", 11),\n    bg="#f0f0f0",\n    fg="#7f8c8d"\n)\nstatus_label.pack(pady=5)\n\nroot.mainloop()`,
+        "shopping-cart.py": `import tkinter as tk\nfrom tkinter import ttk\n\n# Create main window\nroot = tk.Tk()\nroot.title("Shopping Cart")\nroot.geometry("650x500")\nroot.configure(bg="#f8f9fa")\n\n# List of products with prices in Thai Baht\nproducts = {\n    "Laptop": 29999.00,\n    "Smartphone": 15999.00,\n    "Headphones": 2490.00,\n    "Keyboard": 890.00,\n    "Mouse": 450.00,\n    "Monitor": 6990.00,\n    "Printer": 4990.00,\n    "Tablet": 7990.00,\n    "Smartwatch": 5990.00,\n    "Speakers": 2190.00,\n    "Camera": 12990.00,\n    "External Hard Drive": 1990.00\n}\n\n# Header\ntk.Label(\n    root,\n    text="Shopping Cart",\n    font=("Arial", 20, "bold"),\n    bg="#f8f9fa",\n    fg="#2c3e50"\n).pack(pady=10)\n\ntk.Label(\n    root,\n    text="Hold CTRL to select multiple items",\n    font=("Arial", 11),\n    bg="#f8f9fa",\n    fg="#7f8c8d"\n).pack()\n\n# Main frame\nmain_frame = tk.Frame(root, bg="#f8f9fa")\nmain_frame.pack(pady=10, padx=20, fill="both", expand=True)\n\n# Left side: Product list\nproduct_frame = tk.LabelFrame(\n    main_frame,\n    text="Products",\n    font=("Arial", 12, "bold"),\n    bg="#f8f9fa",\n    fg="#2c3e50"\n)\nproduct_frame.pack(side="left", fill="both", expand=True, padx=(0,10))\n\n# Create Listbox with MULTIPLE selection mode\nproduct_scrollbar = tk.Scrollbar(product_frame)\nproduct_scrollbar.pack(side="right", fill="y")\n\nproduct_listbox = tk.Listbox(\n    product_frame,\n    selectmode="multiple",  # MULTIPLE - can select multiple items\n    font=("Arial", 11),\n    bg="#ffffff",\n    fg="#2c3e50",\n    height=15,\n    width=30,\n    yscrollcommand=product_scrollbar.set\n)\nproduct_listbox.pack(side="left", fill="both", expand=True, padx=5, pady=5)\n\nproduct_scrollbar.config(command=product_listbox.yview)\n\n# Insert products into listbox\nfor product in products.keys():\n    product_listbox.insert("end", product)\n\n# Right side: Cart and Total\ncart_frame = tk.LabelFrame(\n    main_frame,\n    text="Your Cart",\n    font=("Arial", 12, "bold"),\n    bg="#f8f9fa",\n    fg="#2c3e50"\n)\ncart_frame.pack(side="right", fill="both", expand=True, padx=(10,0))\n\n# Cart listbox\ncart_scrollbar = tk.Scrollbar(cart_frame)\ncart_scrollbar.pack(side="right", fill="y")\n\ncart_listbox = tk.Listbox(\n    cart_frame,\n    selectmode="browse",\n    font=("Arial", 11),\n    bg="#ffffff",\n    fg="#2c3e50",\n    height=10,\n    width=25,\n    yscrollcommand=cart_scrollbar.set\n)\ncart_listbox.pack(side="left", fill="both", expand=True, padx=5, pady=5)\n\ncart_scrollbar.config(command=cart_listbox.yview)\n\n# Total display\ntotal_label = tk.Label(\n    cart_frame,\n    text="Total: ฿0.00",\n    font=("Arial", 16, "bold"),\n    bg="#f8f9fa",\n    fg="#27ae60"\n)\ntotal_label.pack(pady=10)\n\n# Function to add selected items to cart\ndef add_to_cart():\n    # Get all selected indices\n    selected_indices = product_listbox.curselection()\n    \n    if not selected_indices:\n        status_label.config(\n            text="Please select at least one product",\n            fg="#e74c3c"\n        )\n        return\n    \n    # Add selected items to cart\n    added_count = 0\n    for index in selected_indices:\n        product = product_listbox.get(index)\n        # Check if already in cart\n        cart_items = list(cart_listbox.get(0, "end"))\n        if product not in cart_items:\n            cart_listbox.insert("end", product)\n            added_count += 1\n    \n    # Update total\n    update_total()\n    \n    # Clear selection\n    product_listbox.selection_clear(0, "end")\n    \n    if added_count > 0:\n        status_label.config(\n            text=f"Added {added_count} item(s) to cart",\n            fg="#27ae60"\n        )\n    else:\n        status_label.config(\n            text="Items already in cart",\n            fg="#e67e22"\n        )\n\n# Function to remove selected items from cart\ndef remove_from_cart():\n    selected_indices = cart_listbox.curselection()\n    \n    if not selected_indices:\n        status_label.config(\n            text="Please select item(s) to remove",\n            fg="#e74c3c"\n        )\n        return\n    \n    # Remove items (in reverse order to maintain indices)\n    for index in reversed(selected_indices):\n        cart_listbox.delete(index)\n    \n    update_total()\n    status_label.config(\n        text="Removed item(s) from cart",\n        fg="#e74c3c"\n    )\n\n# Function to clear entire cart\ndef clear_cart():\n    cart_listbox.delete(0, "end")\n    update_total()\n    status_label.config(\n        text="Cart cleared",\n        fg="#7f8c8d"\n    )\n\n# Function to update total cost\ndef update_total():\n    total = 0.0\n    cart_items = cart_listbox.get(0, "end")\n    \n    for item in cart_items:\n        if item in products:\n            total += products[item]\n    \n    # Format with comma separators for thousands\n    total_label.config(text=f"Total: ฿{total:,.2f}")\n    \n    # Show item count\n    item_count = len(cart_items)\n    if item_count > 0:\n        count_label.config(text=f"Items: {item_count}")\n    else:\n        count_label.config(text="Cart is empty")\n\n# Button frame\nbutton_frame = tk.Frame(cart_frame, bg="#f8f9fa")\nbutton_frame.pack(pady=5)\n\nadd_button = tk.Button(\n    button_frame,\n    text="Add to Cart",\n    command=add_to_cart,\n    bg="#27ae60",\n    fg="white",\n    font=("Arial", 10),\n    padx=10,\n    pady=5,\n    width=12\n)\nadd_button.pack(side="left", padx=5)\n\nremove_button = tk.Button(\n    button_frame,\n    text="Remove",\n    command=remove_from_cart,\n    bg="#e74c3c",\n    fg="white",\n    font=("Arial", 10),\n    padx=10,\n    pady=5,\n    width=12\n)\nremove_button.pack(side="left", padx=5)\n\nclear_button = tk.Button(\n    cart_frame,\n    text="Clear Cart",\n    command=clear_cart,\n    bg="#95a5a6",\n    fg="white",\n    font=("Arial", 10),\n    padx=15,\n    pady=5\n)\nclear_button.pack(pady=5)\n\n# Item count\ncount_label = tk.Label(\n    cart_frame,\n    text="Cart is empty",\n    font=("Arial", 10),\n    bg="#f8f9fa",\n    fg="#7f8c8d"\n)\ncount_label.pack()\n\n# Bottom frame for additional info\nbottom_frame = tk.Frame(root, bg="#f8f9fa")\nbottom_frame.pack(pady=5, padx=20, fill="x")\n\n# Show all products with prices\ndef show_price_list():\n    price_text = "Product Prices:\\n"\n    for product, price in products.items():\n        price_text += f"{product}: ฿{price:.2f}\\n"\n    return price_text\n\nprice_button = tk.Button(\n    bottom_frame,\n    text="Show Price List",\n    command=lambda: show_prices(),\n    bg="#3498db",\n    fg="white",\n    font=("Arial", 9),\n    padx=10\n)\nprice_button.pack(side="left")\n\ndef show_prices():\n    price_window = tk.Toplevel(root)\n    price_window.title("Price List")\n    price_window.geometry("350x450")\n    \n    tk.Label(\n        price_window,\n        text="Product Prices",\n        font=("Arial", 14, "bold")\n    ).pack(pady=10)\n    \n    price_listbox = tk.Listbox(price_window, font=("Arial", 10), width=35, height=15)\n    price_listbox.pack(padx=10, pady=10, fill="both", expand=True)\n    \n    for product, price in products.items():\n        price_listbox.insert("end", f"{product}: ฿{price:,.2f}")\n    \n    tk.Button(\n        price_window,\n        text="Close",\n        command=price_window.destroy,\n        bg="#95a5a6",\n        fg="white",\n        padx=15\n    ).pack(pady=10)\n\n# Status bar\nstatus_label = tk.Label(\n    root,\n    text="Select products and click 'Add to Cart'",\n    font=("Arial", 10),\n    bg="#ecf0f1",\n    fg="#7f8c8d",\n    relief="sunken",\n    anchor="w",\n    padx=10\n)\nstatus_label.pack(side="bottom", fill="x")\n\nroot.mainloop()`,
+        "README.md": `# Tkinter Widgets Discovery Workshop\n\nThis folder contains all the Python files needed for the Tkinter Widgets Discovery Workshop.\n\n## File List\n\n### Checkbutton\n- checkbutton.py\n- pizza-order-form.py\n- dark-mode-toggle.py\n\n### Combobox\n- combobox.py\n- country-selector.py\n- font-style-picker.py\n\n### Listbox\n- listbox.py\n- music-playlist.py\n- multi-select-shopping-cart.py\n- shopping-cart.py\n\n### Progressbar\n- progressbar.py\n- file-download-simulator.py\n- countdown-timer.py\n\n### Radiobutton\n- radiobutton.py\n- payment-method.py\n\n### Scale (Slider)\n- scale.py\n- color-mixer.py\n\n### Spinbox\n- spinbox.py\n- ticket-quantity.py\n\n### Entry\n- entry.py\n- login-form.py\n- live-search-filter.py\n\n## How to Use\n1. Run each Python file independently\n2. Interact with the widgets\n3. Explore and discover how each widget works`
+    };
+
+    // Helper: trigger download of a single file
+    function downloadFile(filename, content) {
+        const blob = new Blob([content], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    // Download all files individually (as a batch)
+    function downloadAllFiles() {
+        const entries = Object.entries(fileMap);
+        if (entries.length === 0) {
+            alert('No files available to download.');
+            return;
+        }
+        // Download each file with a small delay to avoid browser blocking
+        entries.forEach(([filename, content], index) => {
+            setTimeout(() => {
+                downloadFile(filename, content);
+            }, index * 150);
+        });
+    }
+
+    // ZIP download placeholder (would require a library like JSZip)
+    function downloadZip() {
+        alert('ZIP download is coming soon! For now, use "Download All Widgets" to get each file individually.');
+        // In a real implementation, you would use JSZip to create a ZIP and download it.
+    }
+
+    // Expose functions globally
+    window.downloadAllFiles = downloadAllFiles;
+    window.downloadZip = downloadZip;
+</script>
+
+</body>
+</html>
